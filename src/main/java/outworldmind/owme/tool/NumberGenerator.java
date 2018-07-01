@@ -2,8 +2,11 @@ package outworldmind.owme.tool;
 
 public class NumberGenerator {
 	
-		public static int generateId() {
-			return 0;
-		}
+	private static int count = 0;
+	
+	
+	public static int generateId() {
+		return ++count;
+	}
 
 }

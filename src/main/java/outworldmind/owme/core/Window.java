@@ -1,25 +1,34 @@
 package outworldmind.owme.core;
 
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.IntBuffer;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.Callbacks.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 
-public class WindowManager {
+public class Window {
 	
+	private final static String defaultName = "OWME";
+	
+	private String name;
 	private int width;
 	private int height;
-	private long window; 
+	private long window;
+	private boolean closeRequest;
 	
-	public WindowManager(int width, int height) {
+	public Window(int width, int height) {
+		this(defaultName, width, height);
+	}
+	
+	public Window(String name, int width, int height) {
+		setName(name);
 		setWidth(width);
 		setHeight(height);
 		initialize();
@@ -35,7 +44,7 @@ public class WindowManager {
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 		
-		window = glfwCreateWindow(width, height, "OWME pre-alfa", NULL, NULL);
+		window = glfwCreateWindow(width, height, name, NULL, NULL);
 		
 		if (window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
@@ -63,20 +72,19 @@ public class WindowManager {
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
 		glfwShowWindow(window);
+		
+		GL.createCapabilities();
+		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+	}
+	
+	public boolean getCloseRequest() {
+		return closeRequest;
 	}
 	
 	public void update() {
-		GL.createCapabilities();
-		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-		
-		while (!glfwWindowShouldClose(window)) {
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			
-			glfwSwapBuffers(window);
-			
-			glfwPollEvents();
-		}
-		
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+		if (glfwWindowShouldClose(window)) closeRequest = true;
 	}
 	
 	public void destroy() {
@@ -84,6 +92,14 @@ public class WindowManager {
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
+	}
+	
+	private void setName(String name) {
+		this.name = (name == null || name.equals("null")) ? defaultName : name;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	private void setWidth(int width) {
