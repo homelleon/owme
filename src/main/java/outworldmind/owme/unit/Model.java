@@ -1,16 +1,23 @@
 package outworldmind.owme.unit;
 
-public class Model extends DrawUnit {
+import outworldmind.owme.tool.NumberGenerator;
+
+public class Model {
 	
+	private int id;
 	private Mesh mesh;
 	private Material material;
 	
 	public Model() {
-		super("model");
+		setId(NumberGenerator.generateId());
 	}
 	
-	public Model(String name) {
-		super(name);
+	private void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public Mesh getMesh() {
