@@ -2,10 +2,10 @@ package outworldmind.owme.math;
 
 public class Maths {
 	
-	public static final float LOSS_OF_PRECISION = 0.0001f;
+	public static final float LOSS_OF_PRECISION = 0.000001f;
 	
 	public static boolean equal(float a, float b) {
-		return ((a - b) <= LOSS_OF_PRECISION);
+		return (Math.abs(a - b) <= LOSS_OF_PRECISION);
 	}
 
 	public static Matrix4 createTransformationMatrix(Vector2 translation, Vector2 scale) {

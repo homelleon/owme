@@ -182,12 +182,23 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public String toString() {
-		return "[" + x + "," + y + "," + z + "]";
+		return "(" + x + ", " + y + ", " + z + ")";
 	}
 
 	@Override
 	public int compareTo(Vector3 vector) {
-		return Maths.compare(this, ((Vector3) vector));
+		if (this == vector || this.equals(vector))
+			return 0;
+		if (Maths.equal(this.x, this.x)) {
+			if (Maths.equal(this.z, this.z))
+				if (this.y < vector.y) return -1;
+			if (Maths.equal(this.z, vector.z))
+				return -1;
+		} else if (this.x < vector.x) {
+			return -1;
+		}
+		
+		return 1;
 	}
 	
 	@Override
