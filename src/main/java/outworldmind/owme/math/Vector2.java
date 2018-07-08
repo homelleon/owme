@@ -8,9 +8,13 @@ public class Vector2 extends Vector<Vector2> {
 		x = y = 0;
 	}
 	
-	public Vector2(float x, float y) {
+	public Vector2(Float x, Float y) {
 		this.x = x;
 		this.y = y;
+	}
+	
+	public Vector2(Integer x, Integer y) {
+		this((float) x, (float) y);
 	}
 	
 	public Vector2(Vector2 vector) {
@@ -52,7 +56,7 @@ public class Vector2 extends Vector<Vector2> {
 		return this;
 	}
 	
-	public Vector2 add(float value) {
+	public Vector2 add(Float value) {
 		x += value;
 		y += value;
 		
@@ -66,7 +70,7 @@ public class Vector2 extends Vector<Vector2> {
 		return this;
 	}
 	
-	public Vector2 sub(float value) {
+	public Vector2 sub(Float value) {
 		x -= value;
 		y -= value;
 		
@@ -80,7 +84,7 @@ public class Vector2 extends Vector<Vector2> {
 		return this;
 	}
 	
-	public Vector2 mul(float value) {
+	public Vector2 mul(Float value) {
 		x *= value;
 		y *= value;
 		
@@ -94,7 +98,7 @@ public class Vector2 extends Vector<Vector2> {
 		return this;
 	}
 	
-	public Vector2 div(float value) {
+	public Vector2 div(Float value) {
 		x /= value;
 		y /= value;
 		

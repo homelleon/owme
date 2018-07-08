@@ -4,21 +4,25 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	
 	public float x, y, z;
 	
-	protected Vector3() {
+	public Vector3() {
 		x = y = z = 0;
 	}
 	
-	protected Vector3(float x, float y, float z) {
+	public Vector3(Float x, Float y, Float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
 	
-	protected Vector3(Vector3 vector) {
+	public Vector3(Integer x, Integer y, Integer z) {
+		this((float) x, (float) y, (float) z);
+	}
+	
+	public Vector3(Vector3 vector) {
 		copy(vector);
 	}	
 	
-	protected Vector3(Vector4 plane) {
+	public Vector3(Vector4 plane) {
 		x = plane.x;
 		y = plane.y;
 		z = plane.z;
@@ -33,7 +37,7 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public float length() {
-		return (float) lengthSquared();
+		return (float) Math.sqrt(lengthSquared());
 	}
 	
 	public float lengthSquared() {
@@ -67,17 +71,18 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
-	public Vector3 scale(float scale) {
+	public Vector3 scale(Float scale) {
 		x *= scale;
 		y *= scale;
 		z *= scale;
 
 		return this;
-
 	}
 	
 	public Vector3 normalize() {
 		float length = this.length();
+		
+		if (length == 0) return this;
 		
 		x /= length;
 		y /= length;
@@ -86,7 +91,7 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
-	public Vector3 rotate(float angle, Vector3 axis) {
+	public Vector3 rotate(Float angle, Vector3 axis) {
 		float sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2));
 		float cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2));
 		
@@ -115,7 +120,7 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
-	public Vector3 add(float value) {
+	public Vector3 add(Float value) {
 		x += value;
 		y += value;
 		z += value;
@@ -132,7 +137,7 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
-	public Vector3 sub(float value) {
+	public Vector3 sub(Float value) {
 		x -= value;
 		y -= value;
 		z -= value;
@@ -148,7 +153,7 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
-	public Vector3 mul(float value) {
+	public Vector3 mul(Float value) {
 		x *= value;
 		y *= value;
 		z *= value;
@@ -164,7 +169,7 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
-	public Vector3 div(float value) {
+	public Vector3 div(Float value) {
 		x /= value;
 		y /= value;
 		z /= value;

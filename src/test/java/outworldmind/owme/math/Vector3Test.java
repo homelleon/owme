@@ -2,23 +2,26 @@ package outworldmind.owme.math;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import outworldmind.owme.tool.DstSrcOutPipe;
+import outworldmind.owme.tool.TestAssistant;
 import outworldmind.owme.tool.TestUnit;
 
 @DisplayName("Vector3")
 public class Vector3Test {
 	
+	static final String CLASS_NAME = Vector3.class.getName();
+	
 	@Test
 	@DisplayName("create") 
 	public void testCreation() {
-		var tester = new Vector3CreationTester();
+		var tester = new Vector3CreationTester(CLASS_NAME);
 		tester.testNoArgsCreation();
 		tester.test3ArgsCreation();
 		tester.testVec3ArgCreation();
@@ -28,7 +31,7 @@ public class Vector3Test {
 	@Test
 	@DisplayName("service methods")
 	public void testServiceMethods() {
-		var tester = new Vector3ServiceTester();
+		var tester = new Vector3ServiceTester(CLASS_NAME);
 		tester.testEquals();
 		tester.testCopy();
 		tester.testCompareTo();
@@ -37,18 +40,17 @@ public class Vector3Test {
 	}
 	
 	@Test
-	@Disabled
 	@DisplayName("operations")
 	public void testOperatopns() {
-		var tester = new Vector3OperationsTester();
-//		tester.testLengthSquared();
-//		tester.testLength();
-//		tester.testNegate();
-//		tester.testDot();
-//		tester.testCross();
-//		tester.testScale();
-//		tester.testNormalize();
-//		tester.testRotate();
+		var tester = new Vector3OperationsTester(CLASS_NAME);
+		tester.testLengthSquared();
+		tester.testLength();
+		tester.testNegate();
+		tester.testDot();
+		tester.testCross();
+		tester.testScale();
+		tester.testNormalize();
+		tester.testRotate();
 //		tester.testAddVector();
 //		tester.testAddValue();
 //		tester.testSubVector();
@@ -63,6 +65,13 @@ public class Vector3Test {
 }
 
 class Vector3CreationTester {
+	
+	private String className;
+	
+	Vector3CreationTester(String className) {
+		this.className = className;
+	}
+	
 	public void testNoArgsCreation() {
 		assertAll("With no arguments",
 			() -> assertTrue(
@@ -171,63 +180,175 @@ class Vector3CreationTester {
 
 class Vector3ServiceTester {
 	
+	private String className;
+	
+	Vector3ServiceTester(String className) {
+		this.className = className;
+	}
+	
 	public void testEquals() {
 		var vectorA = new Vector3(0, 0, 0);
 		var vectorB = new Vector3(1, 1, 1);
 		var vectorC = new Vector3(0, 0, 0);
-		assertAll("Equals",
-			() -> assertTrue(vectorA.equals(vectorA), vectorA + "should be equal self"),
-			() -> assertTrue(vectorA.equals(vectorC), vectorA + "should be equal to " + vectorC),
-			() -> assertFalse(vectorA.equals(vectorB), vectorA + "should not be equal to " + vectorB)
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vectorA, vectorA, true),
+			new DstSrcOutPipe(vectorA, vectorC, true),
+			new DstSrcOutPipe(vectorA, vectorB, false)
 		);
+		
+		TestAssistant.testVector3MethodByName(className, "equals", tests);
 	}
 	
 	public void testCopy() {
 		var baseVector = new Vector3(-1, 0, 3);
 		var vector = new Vector3(2, -1, 3);
-		assertAll("Copy",
-			() -> assertTrue(vector.copy(baseVector).equals(baseVector), baseVector.toString())
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector, baseVector, baseVector)
 		);
+		
+		TestAssistant.testVector3MethodByName(className, "copy", tests);
 	}
 	
 	public void testCompareTo() {
 		var vectorA = new Vector3(0, 0, 0);
 		var vectorB = new Vector3(1, 1, 1);
 		var vectorC = new Vector3(1, 1, 1);
-		assertAll("CompareTo",
-			() -> assertTrue(vectorB.compareTo(vectorB) == 0, vectorB + "should be equal to self"),
-			() -> assertTrue(vectorB.compareTo(vectorC) == 0, vectorB + "should be equal to " + vectorC),
-			() -> assertTrue(vectorA.compareTo(vectorB) == -1, vectorA + "should be less then " + vectorB),
-			() -> assertTrue(vectorB.compareTo(vectorA) == 1, vectorB + "should be more then " + vectorA)
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vectorB, vectorB, 0),
+			new DstSrcOutPipe(vectorB, vectorC, 0),
+			new DstSrcOutPipe(vectorA, vectorB, -1),
+			new DstSrcOutPipe(vectorB, vectorA, 1)
 		);
+		
+		TestAssistant.testVector3MethodByName(className, "compareTo", tests);
 	}
 	
 	public void testClone() {
 		var vector = new Vector3(-1, 0, 3);
-		assertAll("Clone",
-			() -> assertTrue(vector.clone().equals(vector), vector.toString())
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector, null, vector)
 		);
+		
+		TestAssistant.testVector3MethodByName(className, "clone", tests);
 	}
 	
 	public void testToString() {
-		var vector1 = new Vector3();
-		var vector2 = new Vector3(1, 0, -3);
-		assertAll("ToString",
-			() -> assertEquals(vector1.toString(), "(0.0, 0.0, 0.0)", "with no arguments"),
-			() -> assertEquals(vector2.toString(), "(1.0, 0.0, -3.0)", "with arguments")
+		var tests = Stream.of(
+			new DstSrcOutPipe(new Vector3(), null, "(0.0, 0.0, 0.0)"),
+			new DstSrcOutPipe(new Vector3(1, 0, -3), null, "(1.0, 0.0, -3.0)")
 		);
+			
+		TestAssistant.testVector3MethodByName(className, "toString", tests);
 	}
 }
 
 class Vector3OperationsTester {
-//	public void testLengthSquared()
-//	public void testLength()
-//	public void testNegate()
-//	public void testDot()
-//	public void testCross()
-//	public void testScale()
-//	public void testNormalize()
-//	public void testRotate()
+	
+	private String className;
+	
+	Vector3OperationsTester(String className) {
+		this.className = className;
+	}
+	
+	public void testLengthSquared() {
+		var tests = Stream.of(
+			new DstSrcOutPipe(new Vector3(), null, 0.0f),
+			new DstSrcOutPipe(new Vector3(1, 0, -3), null, 10f)
+		);
+			
+		TestAssistant.testVector3MethodByName(className, "lengthSquared", tests);
+	}
+	
+	public void testLength() {
+		var tests = Stream.of(
+			new DstSrcOutPipe(new Vector3(), null, 0.0f),
+			new DstSrcOutPipe(new Vector3(1, 0, -3), null, 3.162277660168379f)
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "length", tests);
+	}
+	
+	public void testNegate() {
+		var tests = Stream.of(
+			new DstSrcOutPipe(new Vector3(), null, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(new Vector3(1, 0, -3), null, new Vector3(-1, 0, 3))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "negate", tests);
+	}
+	
+	public void testDot() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 0, -3);
+		var vector3 = new Vector3(0, -2, 1);
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, vector2, 0.0f),
+			new DstSrcOutPipe(vector2, vector3, -3.0f),
+			new DstSrcOutPipe(vector3, vector2, -3.0f)
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "dot", tests);
+	}
+	
+	public void testCross() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 0, -3);
+		var vector3 = new Vector3(0, -2, 1);
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, vector2, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector2, vector3, new Vector3(-6, -1, -2)),
+			new DstSrcOutPipe(vector3, vector2, new Vector3(6, 1, 2))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "cross", tests);
+	}
+	
+	public void testScale() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 0, -3);
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, 5.0f, new Vector3()),
+			new DstSrcOutPipe(vector2, 5.0f, new Vector3(5, 0, -15)),
+			new DstSrcOutPipe(vector2, -5.0f, new Vector3(-5, 0, 15))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "scale", tests);
+	}
+	
+	public void testNormalize() {
+		var tests = Stream.of(
+			new DstSrcOutPipe(new Vector3(), null, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(new Vector3(1, 0, -3), null, new Vector3(0.3162277f, 0.0f, -0.948683298f))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "normalize", tests);
+	}
+	
+	public void testRotate() {
+		var angle1 = new Object[] { 5.0f, new Vector3(1, 0, 0) };
+		var angle2 = new Object[] { 5.0f, new Vector3(0, 1, 0) };
+		var angle3 = new Object[] { 5.0f, new Vector3(0, 0, 1) };
+		var angle4 = new Object[] { -3.0f, new Vector3(1, 1, 1) };
+		var angle5 = new Object[] { 2.0f, new Vector3(-2, 0, 1) };
+		
+		// TODO: make it succeed
+//		var tests = Stream.of(
+//			new DstSrcOutPipe(new Vector3(), angle1 ,new Vector3(0, 0, 0)),
+//			new DstSrcOutPipe(new Vector3(1, 2, 3), angle2, new Vector3(0, 0, 0)),
+//			new DstSrcOutPipe(new Vector3(1, 2, 3), angle3, new Vector3(0, 0, 0)),
+//			new DstSrcOutPipe(new Vector3(1, 2, 3), angle4, new Vector3(0, 0, 0)),
+//			new DstSrcOutPipe(new Vector3(1, 2, 3), angle5, new Vector3(0, 0, 0))
+//		);
+//		
+//		TestAssistant.testVector3MethodByName(className, "rotate", tests);
+	}
 //	public void testAddVector()
 //	public void testAddValue()
 //	public void testSubVector()

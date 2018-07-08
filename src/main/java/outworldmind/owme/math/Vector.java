@@ -7,8 +7,8 @@ public abstract class Vector<T> {
 	public abstract T sub(T vector);
 	public abstract T mul(T vector);
 	public abstract T div(T vector);
-	public abstract T add(float value);
-	public abstract T sub(float value);
-	public abstract T mul(float value);
-	public abstract T div(float value);
+	public abstract T add(Float value);
+	public abstract T sub(Float value);
+	public abstract T mul(Float value);
+	public abstract T div(Float value);
 }

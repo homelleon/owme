@@ -27,5 +27,9 @@ public class TestUnit {
 	public String getMessage() {
 		return message;
 	}
+	
+	public String getDebugMessage() {
+		return message + " Expected: " + expected + ", Actual: " + actual;
+	}
 
 }
