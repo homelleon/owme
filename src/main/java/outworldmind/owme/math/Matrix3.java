@@ -2,23 +2,21 @@ package outworldmind.owme.math;
 
 import java.nio.FloatBuffer;
 
-
-public class Matrix4 {
-
-	private final int size = 4;
+public class Matrix3 {
+	private final int size = 3;
 	public float[][] m;
 	
-	public Matrix4() {
+	public Matrix3() {
 		copy(new float[size][size]);
 		setIdentity();
 	}
 	
-	public Matrix4(Matrix4 matrix) {
+	public Matrix3(Matrix3 matrix) {
 		copy(matrix.m.clone());
 	}
 	
 	
-	public Matrix4 copy(float[][] m) {
+	public Matrix3 copy(float[][] m) {
 		if (m.length != size || m[0].length != size)
 			throw new IllegalArgumentException("Matrix4.copy - size of array must be " + size);
 		
@@ -28,13 +26,13 @@ public class Matrix4 {
 	}
 	
 	
-	public Matrix4 copy(Matrix4 matrix) {
+	public Matrix3 copy(Matrix3 matrix) {
 		m = matrix.m.clone();
 		
 		return this;
 	}
 	
-	public Matrix4 zero() {
+	public Matrix3 zero() {
 		for (int i = 0; i < size; i++)
 			for (int j = 0; j < size; j++)
 				m[i][j] = 0.0f;
@@ -42,7 +40,7 @@ public class Matrix4 {
 		return this;
 	}
 	
-	public Matrix4 setIdentity() {
+	public Matrix3 setIdentity() {
 		zero();
 		for (int i = 0; i < size; i++)
 			m[i][i] = 1.0f;
@@ -51,7 +49,7 @@ public class Matrix4 {
 	}
 	
 	public Matrix4 invert() {
-		var determinant = determinant();
+		float determinant = determinant();
 		
 		if (determinant == 0)
 			return null;
@@ -62,28 +60,28 @@ public class Matrix4 {
 		 * m20 m21 m22 m23
 		 * m30 m31 m32 m33
 		 */
-		var determinant_inv = 1f / determinant;
+		float determinant_inv = 1f / determinant;
 
 		// first row
-		var t00 =  determinant3x3(m[1][1], m[1][2], m[1][3], m[2][1], m[2][2], m[2][3], m[3][1], m[3][2], m[3][3]);
-		var t01 = -determinant3x3(m[1][0], m[1][2], m[1][3], m[2][0], m[2][2], m[2][3], m[3][0], m[3][2], m[3][3]);
-		var t02 =  determinant3x3(m[1][0], m[1][1], m[1][3], m[2][0], m[2][1], m[2][3], m[3][0], m[3][1], m[3][3]);
-		var t03 = -determinant3x3(m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2], m[3][0], m[3][1], m[3][2]);
+		float t00 =  determinant3x3(m[1][1], m[1][2], m[1][3], m[2][1], m[2][2], m[2][3], m[3][1], m[3][2], m[3][3]);
+		float t01 = -determinant3x3(m[1][0], m[1][2], m[1][3], m[2][0], m[2][2], m[2][3], m[3][0], m[3][2], m[3][3]);
+		float t02 =  determinant3x3(m[1][0], m[1][1], m[1][3], m[2][0], m[2][1], m[2][3], m[3][0], m[3][1], m[3][3]);
+		float t03 = -determinant3x3(m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2], m[3][0], m[3][1], m[3][2]);
 		// second row
-		var t10 = -determinant3x3(m[0][1], m[0][2], m[0][3], m[2][1], m[2][2], m[2][3], m[3][1], m[3][2], m[3][3]);
-		var t11 =  determinant3x3(m[0][0], m[0][2], m[0][3], m[2][0], m[2][2], m[2][3], m[3][0], m[3][2], m[3][3]);
-		var t12 = -determinant3x3(m[0][0], m[0][1], m[0][3], m[2][0], m[2][1], m[2][3], m[3][0], m[3][1], m[3][3]);
-		var t13 =  determinant3x3(m[0][0], m[0][1], m[0][2], m[2][0], m[2][1], m[2][2], m[3][0], m[3][1], m[3][2]);
+		float t10 = -determinant3x3(m[0][1], m[0][2], m[0][3], m[2][1], m[2][2], m[2][3], m[3][1], m[3][2], m[3][3]);
+		float t11 =  determinant3x3(m[0][0], m[0][2], m[0][3], m[2][0], m[2][2], m[2][3], m[3][0], m[3][2], m[3][3]);
+		float t12 = -determinant3x3(m[0][0], m[0][1], m[0][3], m[2][0], m[2][1], m[2][3], m[3][0], m[3][1], m[3][3]);
+		float t13 =  determinant3x3(m[0][0], m[0][1], m[0][2], m[2][0], m[2][1], m[2][2], m[3][0], m[3][1], m[3][2]);
 		// third row
-		var t20 =  determinant3x3(m[0][1], m[0][2], m[0][3], m[1][1], m[1][2], m[1][3], m[3][1], m[3][2], m[3][3]);
-		var t21 = -determinant3x3(m[0][0], m[0][2], m[0][3], m[1][0], m[1][2], m[1][3], m[3][0], m[3][2], m[3][3]);
-		var t22 =  determinant3x3(m[0][0], m[0][1], m[0][3], m[1][0], m[1][1], m[1][3], m[3][0], m[3][1], m[3][3]);
-		var t23 = -determinant3x3(m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[3][0], m[3][1], m[3][2]);
+		float t20 =  determinant3x3(m[0][1], m[0][2], m[0][3], m[1][1], m[1][2], m[1][3], m[3][1], m[3][2], m[3][3]);
+		float t21 = -determinant3x3(m[0][0], m[0][2], m[0][3], m[1][0], m[1][2], m[1][3], m[3][0], m[3][2], m[3][3]);
+		float t22 =  determinant3x3(m[0][0], m[0][1], m[0][3], m[1][0], m[1][1], m[1][3], m[3][0], m[3][1], m[3][3]);
+		float t23 = -determinant3x3(m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[3][0], m[3][1], m[3][2]);
 		// fourth row
-		var t30 = -determinant3x3(m[0][1], m[0][2], m[0][3], m[1][1], m[1][2], m[1][3], m[2][1], m[2][2], m[2][3]);
-		var t31 =  determinant3x3(m[0][0], m[0][2], m[0][3], m[1][0], m[1][2], m[1][3], m[2][0], m[2][2], m[2][3]);
-		var t32 = -determinant3x3(m[0][0], m[0][1], m[0][3], m[1][0], m[1][1], m[1][3], m[2][0], m[2][1], m[2][3]);
-		var t33 =  determinant3x3(m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2]);
+		float t30 = -determinant3x3(m[0][1], m[0][2], m[0][3], m[1][1], m[1][2], m[1][3], m[2][1], m[2][2], m[2][3]);
+		float t31 =  determinant3x3(m[0][0], m[0][2], m[0][3], m[1][0], m[1][2], m[1][3], m[2][0], m[2][2], m[2][3]);
+		float t32 = -determinant3x3(m[0][0], m[0][1], m[0][3], m[1][0], m[1][1], m[1][3], m[2][0], m[2][1], m[2][3]);
+		float t33 =  determinant3x3(m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2]);
 
 		// transpose and divide by the determinant
 		m[0][0] = t00 * determinant_inv;
@@ -116,7 +114,7 @@ public class Matrix4 {
 	}
 	
 	public float determinant() {
-		var f =
+		float f =
 			m[0][0]
 				* ((m[1][1] * m[2][2] * m[3][3] + m[1][2] * m[2][3] * m[3][1] + m[1][3] * m[2][1] * m[3][2])
 					- m[1][3] * m[2][2] * m[3][1]
@@ -159,13 +157,13 @@ public class Matrix4 {
 	}
 	
 	public Matrix4 rotate(Vector3 rotation) {
-		var rx = new Matrix4();
-		var ry = new Matrix4();
-		var rz = new Matrix4();
+		Matrix4 rx = new Matrix4();
+		Matrix4 ry = new Matrix4();
+		Matrix4 rz = new Matrix4();
 		
-		var x = (float) Math.toRadians(rotation.x);
-		var y = (float) Math.toRadians(rotation.y);
-		var z = (float) Math.toRadians(rotation.z);
+		float x = (float) Math.toRadians(rotation.x);
+		float y = (float) Math.toRadians(rotation.y);
+		float z = (float) Math.toRadians(rotation.z);
 		
 		rz.m[0][0] = (float)Math.cos(z); rz.m[0][1] = -(float)Math.sin(z); 	 rz.m[0][2] = 0; 				   rz.m[0][3] = 0;
 		rz.m[1][0] = (float)Math.sin(z); rz.m[1][1] = (float)Math.cos(z);  	 rz.m[1][2] = 0; 				   rz.m[1][3] = 0;
@@ -188,36 +186,36 @@ public class Matrix4 {
 	}
 	
 	public Matrix4 rotate(float angle, Vector3 axis) {		
-		var c = (float) Math.cos(angle);
-		var s = (float) Math.sin(angle);
-		var oneminusc = 1.0f - c;
-		var xy = axis.x * axis.y;
-		var yz = axis.y * axis.z;
-		var xz = axis.x * axis.z;
-		var xs = axis.x * s;
-		var ys = axis.y * s;
-		var zs = axis.z * s;
+		float c = (float) Math.cos(angle);
+		float s = (float) Math.sin(angle);
+		float oneminusc = 1.0f - c;
+		float xy = axis.x * axis.y;
+		float yz = axis.y * axis.z;
+		float xz = axis.x * axis.z;
+		float xs = axis.x * s;
+		float ys = axis.y * s;
+		float zs = axis.z * s;
 
-		var f00 = axis.x * axis.x * oneminusc + c;
-		var f01 = xy * oneminusc + zs;
-		var f02 = xz * oneminusc - ys;
+		float f00 = axis.x * axis.x * oneminusc + c;
+		float f01 = xy * oneminusc + zs;
+		float f02 = xz * oneminusc - ys;
 		// n[3] not used
-		var f10 = xy * oneminusc - zs;
-		var f11 = axis.y * axis.y * oneminusc + c;
-		var f12 = yz * oneminusc + xs;
+		float f10 = xy * oneminusc - zs;
+		float f11 = axis.y * axis.y * oneminusc + c;
+		float f12 = yz * oneminusc + xs;
 		// n[7] not used
-		var f20 = xz * oneminusc + ys;
-		var f21 = yz * oneminusc - xs;
-		var f22 = axis.z * axis.z * oneminusc + c;
+		float f20 = xz * oneminusc + ys;
+		float f21 = yz * oneminusc - xs;
+		float f22 = axis.z * axis.z * oneminusc + c;
 
-		var t00 = m[0][0] * f00 + m[1][0] * f01 + m[2][0] * f02;
-		var t01 = m[0][1] * f00 + m[1][1] * f01 + m[2][1] * f02;
-		var t02 = m[0][2] * f00 + m[1][2] * f01 + m[2][2] * f02;
-		var t03 = m[0][3] * f00 + m[1][3] * f01 + m[2][3] * f02;
-		var t10 = m[0][0] * f10 + m[1][0] * f11 + m[2][0] * f12;
-		var t11 = m[0][1] * f10 + m[1][1] * f11 + m[2][1] * f12;
-		var t12 = m[0][2] * f10 + m[1][2] * f11 + m[2][2] * f12;
-		var t13 = m[0][3] * f10 + m[1][3] * f11 + m[2][3] * f12;
+		float t00 = m[0][0] * f00 + m[1][0] * f01 + m[2][0] * f02;
+		float t01 = m[0][1] * f00 + m[1][1] * f01 + m[2][1] * f02;
+		float t02 = m[0][2] * f00 + m[1][2] * f01 + m[2][2] * f02;
+		float t03 = m[0][3] * f00 + m[1][3] * f01 + m[2][3] * f02;
+		float t10 = m[0][0] * f10 + m[1][0] * f11 + m[2][0] * f12;
+		float t11 = m[0][1] * f10 + m[1][1] * f11 + m[2][1] * f12;
+		float t12 = m[0][2] * f10 + m[1][2] * f11 + m[2][2] * f12;
+		float t13 = m[0][3] * f10 + m[1][3] * f11 + m[2][3] * f12;
 		
 		
 		m[2][0] = m[0][0] * f20 + m[1][0] * f21 + m[2][0] * f22;
@@ -278,8 +276,8 @@ public class Matrix4 {
 	
 	public Matrix4 PerspectiveProjection(float fov, float width, float height, float nearPlane, float farPlane) {
 		setIdentity();
-		var tanFOV = (float) Math.tan(Math.toRadians(fov / 2));
-		var aspectRatio = width / height;
+		float tanFOV = (float) Math.tan(Math.toRadians(fov / 2));
+		float aspectRatio = width / height;
 		
 		m[0][0] = 1 / (tanFOV * aspectRatio);
 		m[1][1] = 1 / tanFOV;
@@ -291,10 +289,10 @@ public class Matrix4 {
 	
 	public Matrix4 makeProjectionMatrix(float fov, float nearPlane, float farPlane, float width, float height) {
 		this.setIdentity();
-		var aspectRatio = width / height;
-		var y_scale = (float) (1f / Math.tan(Math.toRadians(fov / 2f)));
-		var x_scale = y_scale / aspectRatio;
-		var frustrum_length = farPlane - nearPlane;
+		float aspectRatio = width / height;
+		float y_scale = (float) (1f / Math.tan(Math.toRadians(fov / 2f)));
+		float x_scale = y_scale / aspectRatio;
+		float frustrum_length = farPlane - nearPlane;
 
 		this.m[0][0] = x_scale;
 		this.m[1][1] = y_scale;
@@ -306,9 +304,9 @@ public class Matrix4 {
 	}
 	
 	public Matrix4 View(Vector3 forward, Vector3 up)	{
-		var f = forward;
-		var u = up;
-		var r = u.cross(f);
+		Vector3 f = forward;
+		Vector3 u = up;
+		Vector3 r = u.cross(f);
 		
 		m[0][0] = r.x; m[0][1] = r.y; m[0][2] = r.z; m[0][3] = 0;
 		m[1][0] = u.x; m[1][1] = u.y; m[1][2] = u.z; m[1][3] = 0;
@@ -319,7 +317,7 @@ public class Matrix4 {
 	}
 	
 	public Matrix4 mul(Matrix4 matrix) {
-		var result = new Matrix4();
+		Matrix4 result = new Matrix4();
 		
 		result.m[0][0] = m[0][0] * matrix.m[0][0] + m[1][0] * matrix.m[0][1] + m[2][0] * matrix.m[0][2] + m[3][0] * matrix.m[0][3];
 		result.m[0][1] = m[0][1] * matrix.m[0][0] + m[1][1] * matrix.m[0][1] + m[2][1] * matrix.m[0][2] + m[3][1] * matrix.m[0][3];
@@ -354,8 +352,8 @@ public class Matrix4 {
 		return result;
 	}
 	
-	public Matrix4 transpose() {
-		var result = new Matrix4();
+	public Matrix3 transpose() {
+		var result = new Matrix3();
 		
 		for (int i = 0; i < 4; i++)
 			for (int j = 0; j < 4; j++)
@@ -367,14 +365,14 @@ public class Matrix4 {
 	}
 	
 	public boolean equals(Matrix4 matrix) {
-		for (int i = 0; i < size; i++)
-			for (int j = 0; j < size; j++)
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++)
 				if (!Maths.equal(m[i][j], matrix.m[i][j])) return false;
 		
 		return true;	
 	}
 	
-	public Matrix4 load(FloatBuffer buf) {
+	public Matrix3 load(FloatBuffer buf) {
 		
 		for (var i = 0; i < size; i++)
 			for (var j = 0; j < size; j++)
@@ -383,7 +381,7 @@ public class Matrix4 {
 		return this;
 	}
 	
-	public Matrix4 store(FloatBuffer buf) {
+	public Matrix3 store(FloatBuffer buf) {
 		for (var i = 0; i < size; i++)
 			for (var j = 0; j < size; j++)
 				buf.put(m[i][j]);
@@ -396,24 +394,12 @@ public class Matrix4 {
 	 */
 	public String toString() {
 		
-		return 	"|" + m[0][0] + " " + m[1][0] + " " + m[2][0] + " " + m[3][0] + "|\n" +
-				"|" + m[0][1] + " " + m[1][1] + " " + m[2][1] + " " + m[3][1] + "|\n" +
-				"|" + m[0][2] + " " + m[1][2] + " " + m[2][2] + " " + m[3][2] + "|\n" +
-				"|" + m[0][3] + " " + m[1][3] + " " + m[2][3] + " " + m[3][3] + "|";
+		return 	"|" + m[0][0] + " " + m[1][0] + " " + m[2][0] + "|\n" +
+				"|" + m[0][1] + " " + m[1][1] + " " + m[2][1] + "|\n" +
+				"|" + m[0][2] + " " + m[1][2] + " " + m[2][2] + "|\n";
 	}
 	
-//	/**
-//	 * Horizontal visualization
-//	 */
-//	public String toString() {
-//		
-//		return 	"|" + m[0][0] + " " + m[0][1] + " " + m[0][2] + " " + m[0][3] + "|\n" +
-//				"|" + m[1][0] + " " + m[1][1] + " " + m[1][2] + " " + m[1][3] + "|\n" +
-//				"|" + m[2][0] + " " + m[2][1] + " " + m[2][2] + " " + m[2][3] + "|\n" +
-//				"|" + m[3][0] + " " + m[3][1] + " " + m[3][2] + " " + m[3][3] + "|";
-//	}
-	
-	public Matrix4 clone() {
-		return new Matrix4(this);
+	public Matrix3 clone() {
+		return new Matrix3(this);
 	}
 }

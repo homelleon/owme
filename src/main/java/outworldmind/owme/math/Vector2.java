@@ -28,10 +28,6 @@ public class Vector2 extends Vector<Vector2> {
 		return this;
 	}
 	
-	public float length() {
-		return (float) Math.sqrt(lengthSquared());
-	}
-	
 	public float lengthSquared() {
 		return x * x + y * y;
 	}

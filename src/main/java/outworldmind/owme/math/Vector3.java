@@ -36,10 +36,6 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
-	public float length() {
-		return (float) Math.sqrt(lengthSquared());
-	}
-	
 	public float lengthSquared() {
 		return x * x + y * y + z * z;
 	}
@@ -91,6 +87,28 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
+	public Vector3 rotate(Rotation rotation) {
+		float sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2));
+		float cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2));
+		
+		float rX = axis.x * (float) Math.sin(Math.toRadians(angle / 2));
+		float rY = axis.y * (float) Math.sin(Math.toRadians(angle / 2));
+		float rZ = axis.z * (float) Math.sin(Math.toRadians(angle / 2));
+		float rW = (float) Math.cos(Math.toRadians(angle / 2));
+		
+		Quaternion rotation = new Quaternion(rX, rY, rZ, rW);
+		Quaternion conjugate = rotation.conjugate();
+		
+		Quaternion w = rotation.mul(this).mul(conjugate);
+		
+		x = w.x;
+		y = w.y;
+		z = w.z;
+		
+		return this;
+	}
+	
+	// TODO: make it with one arg - rotation
 	public Vector3 rotate(Float angle, Vector3 axis) {
 		float sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2));
 		float cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2));

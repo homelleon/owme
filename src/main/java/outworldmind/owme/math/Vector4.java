@@ -1,6 +1,6 @@
 package outworldmind.owme.math;
 
-public class Vector4 {
+public class Vector4 extends Vector<Vector4> {
 	
 	public float x, y, z, w;
 	
@@ -8,7 +8,7 @@ public class Vector4 {
 		x = y = z = w = 0;
 	}
 	
-	public Vector4(float x, float y, float z, float w) {
+	public Vector4(Float x, Float y, Float z, Float w) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -35,18 +35,11 @@ public class Vector4 {
 		return this;
 	}
 	
-	public float length() {
-		return (float) Math.sqrt(lengthSquared());
-	}
-	
+	@Override
 	public float lengthSquared() {
 		return x * x + y * y + z * z + w * w;
 	}
 	
-	/**
-	 * Negate a vector
-	 * @return this
-	 */
 	public Vector4 negate() {
 		x = -x;
 		y = -y;
@@ -60,7 +53,7 @@ public class Vector4 {
 		return x * vector.x + y * vector.y + z * vector.z + w * vector.w;
 	}
 	
-	public Vector4 scale(float scale) {
+	public Vector4 scale(Float scale) {
 
 		x *= scale;
 		y *= scale;
@@ -82,6 +75,7 @@ public class Vector4 {
 		return this;
 	}
 	
+	@Override
 	public Vector4 add(Vector4 vector) {
 		x += vector.x;
 		y += vector.y;
@@ -91,7 +85,8 @@ public class Vector4 {
 		return this;
 	}
 	
-	public Vector4 add(float value) {
+	@Override
+	public Vector4 add(Float value) {
 		x += value;
 		y += value;
 		z += value;
@@ -100,7 +95,7 @@ public class Vector4 {
 		return this;
 	}
 	
-	
+	@Override
 	public Vector4 sub(Vector4 vector) {
 		x -= vector.x;
 		y -= vector.y;
@@ -110,7 +105,8 @@ public class Vector4 {
 		return this;
 	}
 	
-	public Vector4 sub(float value) {
+	@Override
+	public Vector4 sub(Float value) {
 		x -= value;
 		y -= value;
 		z -= value;
@@ -119,6 +115,7 @@ public class Vector4 {
 		return this;
 	}
 	
+	@Override
 	public Vector4 mul(Vector4 vector) {
 		x *= vector.x;
 		y *= vector.y;
@@ -128,7 +125,8 @@ public class Vector4 {
 		return this;
 	}
 	
-	public Vector4 mul(float value) {
+	@Override
+	public Vector4 mul(Float value) {
 		x *= value;
 		y *= value;
 		z *= value;
@@ -151,6 +149,7 @@ public class Vector4 {
 		return this;
 	}
 	
+	@Override
 	public Vector4 div(Vector4 vector) {
 		x /= vector.x;
 		y /= vector.y;
@@ -160,7 +159,8 @@ public class Vector4 {
 		return this;
 	}
 	
-	public Vector4 div(float value) {
+	@Override
+	public Vector4 div(Float value) {
 		x /= value;
 		y /= value;
 		z /= value;
@@ -177,10 +177,10 @@ public class Vector4 {
 	public String toString() {
 		return "[" + x + "," + y + "," + z + "," + w + "]";
 	}
-	
+
 	@Override
 	public Vector4 clone() {
-		return new Vector4(this);		
+		return new Vector4(this);
 	}
 
 }

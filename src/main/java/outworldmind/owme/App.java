@@ -7,7 +7,7 @@ public class App {
     public static void main(String[] args ) {
     	  	
     	var config = new Config();
-    	config.setParam(Engine.PARAM_WINDOW_NAME, "OWME Alpha");
+    	config.setParam(Engine.PARAM_WINDOW_NAME, "OWME Alpha Test Window");
     	config.setParam(Engine.PARAM_WINDOW_WIDTH, 1024);
     	config.setParam(Engine.PARAM_WINDOW_HEIGHT, 768);
     	
