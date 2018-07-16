@@ -12,8 +12,12 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		set(x, y, z);
 	}
 	
+	public Vector3(Double x, Double y, Double z) {
+		set(x.floatValue(), y.floatValue(), z.floatValue());
+	}
+	
 	public Vector3(Integer x, Integer y, Integer z) {
-		set((float) x, (float) y, (float) z);
+		set(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Vector3 vector) {
@@ -120,18 +124,20 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3 rotate(Float angle, Vector3 axis) {
-		var sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2f));
-		var cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2f));
-		
-		var rX = axis.x * sinHalfAngle;
-		var rY = axis.y * sinHalfAngle;
-		var rZ = axis.z * sinHalfAngle;
-		var rW = cosHalfAngle;
-		
-		var rotationQ = new Quaternion(rX, rY, rZ, rW);
-		var conjugateQ = rotationQ.clone().conjugate();
-		
-		copy(rotationQ.mul(this).mul(conjugateQ));
+		var rotation = new Matrix4().rotate(angle, axis);
+		copy(rotation.mul(this));
+//		var sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2f));
+//		var cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2f));
+//		
+//		var rX = axis.x * sinHalfAngle;
+//		var rY = axis.y * sinHalfAngle;
+//		var rZ = axis.z * sinHalfAngle;
+//		var rW = cosHalfAngle;
+//		
+//		var rotationQ = new Quaternion(rX, rY, rZ, rW);
+//		var conjugateQ = rotationQ.clone().conjugate();
+//		
+//		copy(rotationQ.mul(this).mul(conjugateQ));
 		
 		return this;
 	}
