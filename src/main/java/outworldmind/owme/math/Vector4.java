@@ -9,21 +9,38 @@ public class Vector4 extends Vector<Vector4> {
 	}
 	
 	public Vector4(Float x, Float y, Float z, Float w) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.w = w;
+		set(x, y, z, w);
 	}
+	
+	public Vector4(Integer x, Integer y, Integer z, Integer w ) {
+		set(x, y, z, w);
+	} 
 	
 	public Vector4(Vector4 vector) {
 		copy(vector);
 	}
 	
+	public Vector4(Quaternion q) {
+		copy(q);
+	}
+	
 	public Vector4(Vector3 vector) {
-		x = vector.x;
-		y = vector.y;
-		z = vector.z;
-		w = 1.0f;
+		copy(vector);
+	}
+	
+	public Vector4 set(Integer x, Integer y, Integer z, Integer w) {
+		set((float) x, (float) y, (float) z, (float) w);
+		
+		return this;
+	}
+	
+	public Vector4 set(Float x, Float y, Float z, Float w) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+		
+		return this;
 	}
 	
 	public Vector4 copy(Vector4 vector) {
@@ -31,6 +48,24 @@ public class Vector4 extends Vector<Vector4> {
 		y = vector.y;
 		z = vector.z;
 		w = vector.w;
+		
+		return this;
+	}
+	
+	public Vector4 copy(Quaternion q) {
+		x = q.x;
+		y = q.y;
+		z = q.z;
+		w = q.w;
+		
+		return this;
+	}
+	
+	public Vector4 copy(Vector3 vector) {
+		x = vector.x;
+		y = vector.y;
+		z = vector.z;
+		w = 1.0f;
 		
 		return this;
 	}

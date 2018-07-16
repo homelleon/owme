@@ -50,7 +50,8 @@ public class Vector3Test {
 		tester.testCross();
 		tester.testScale();
 		tester.testNormalize();
-		tester.testRotate();
+		tester.testRotateAngle();
+		tester.testRotateRotation();
 //		tester.testAddVector();
 //		tester.testAddValue();
 //		tester.testSubVector();
@@ -127,7 +128,7 @@ class Vector3CreationTester {
 		var vector = new Vector3(vectorBase);
 		assertAll("With Vector3 argument",
 			() -> assertTrue(
-					vector.getClass().getName().equals("outworldmind.owme.math.Vector3"), 
+					vector.getClass().getName().equals(className), 
 					"class is Vector3"),
 			() -> args3Vec().forEach(this::assertCreationValue)
 		);
@@ -155,7 +156,7 @@ class Vector3CreationTester {
 		var vector = new Vector3(plane);
 		assertAll("With plane argument",
 			() -> assertTrue(
-					vector.getClass().getName().equals("outworldmind.owme.math.Vector3"), 
+					vector.getClass().getName().equals(className), 
 					"class is Vector3"),
 			() -> argsPlane().forEach(this::assertCreationValue)
 		);
@@ -174,6 +175,32 @@ class Vector3CreationTester {
 				new float[] {plane.x, plane.y, plane.z},
 				new Vector3(plane),
 				plane.toString()
+			));
+	}
+	
+	public void testQuaternionArgCreation() {
+		var q = new Quaternion(-1, 0, 3, 1);
+		var vector = new Vector3(q);
+		assertAll("With quatenion argument",
+				() -> assertTrue(vector.getClass().getName().equals(className), 
+						"class is Vector3"),
+				() -> argsQuaternion().forEach(this::assertCreationValue)
+				);
+	}
+	
+	private Stream<TestUnit> argsQuaternion() {
+		var quaternions = Stream.of(
+			new Quaternion(0, 0, 0, 1),
+			new Quaternion(0, 1, 2, 3),
+			new Quaternion(-1, 0, 3, -2),
+			new Quaternion(-100, 500, -30, 50)
+		);
+		
+		return quaternions.map(q -> 
+			new TestUnit(
+				new float[] {q.x, q.y, q.z},
+				new Vector3(q),
+				q.toString()
 			));
 	}
 }
@@ -331,23 +358,62 @@ class Vector3OperationsTester {
 		TestAssistant.testVector3MethodByName(className, "normalize", tests);
 	}
 	
-	public void testRotate() {
+	public void testRotateAngle() {
 		var angle1 = new Object[] { 5.0f, new Vector3(1, 0, 0) };
 		var angle2 = new Object[] { 5.0f, new Vector3(0, 1, 0) };
 		var angle3 = new Object[] { 5.0f, new Vector3(0, 0, 1) };
 		var angle4 = new Object[] { -3.0f, new Vector3(1, 1, 1) };
 		var angle5 = new Object[] { 2.0f, new Vector3(-2, 0, 1) };
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 2, 3);
+		var vector3 = new Vector3(1, 0, -3);
 		
-		// TODO: make it succeed
-//		var tests = Stream.of(
-//			new DstSrcOutPipe(new Vector3(), angle1 ,new Vector3(0, 0, 0)),
-//			new DstSrcOutPipe(new Vector3(1, 2, 3), angle2, new Vector3(0, 0, 0)),
-//			new DstSrcOutPipe(new Vector3(1, 2, 3), angle3, new Vector3(0, 0, 0)),
-//			new DstSrcOutPipe(new Vector3(1, 2, 3), angle4, new Vector3(0, 0, 0)),
-//			new DstSrcOutPipe(new Vector3(1, 2, 3), angle5, new Vector3(0, 0, 0))
-//		);
-//		
-//		TestAssistant.testVector3MethodByName(className, "rotate", tests);
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, angle1, new Vector3(0, 0, 0)),
+			
+			new DstSrcOutPipe(vector2, angle1, new Vector3(1.0f, 1.7309222f, 3.1628957f)),
+			new DstSrcOutPipe(vector2, angle2, new Vector3(1.257662f, 2.0f, 2.9014285f)),
+			new DstSrcOutPipe(vector2, angle3, new Vector3(0.8218832f, 2.079545f, 3.0f)),
+			new DstSrcOutPipe(vector2, angle4, new Vector3(0.9518415f, 2.104529f, 2.94363f)),
+			new DstSrcOutPipe(vector2, angle5, new Vector3(0.9260271f, 2.2379155f, 2.8520544f)),
+			
+			new DstSrcOutPipe(vector3, angle1, new Vector3(1.0f, 0.26146722f, -2.988584f)),
+			new DstSrcOutPipe(vector3, angle2, new Vector3(0.7347275f, 0.0f, -3.0757399f)),
+			new DstSrcOutPipe(vector3, angle3, new Vector3(0.9961947f, 0.087155744f, -3.0f)),
+			new DstSrcOutPipe(vector3, angle4, new Vector3(1.14995f, -0.21179451f, -2.9381554f)),
+			new DstSrcOutPipe(vector3, angle5, new Vector3(1.0030423f, -0.17428517f, -2.9939163f))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "rotate", tests);
+	}
+	
+	public void testRotateRotation() {
+		var rotation1 = new Rotation(5f, 0, 0);
+		var rotation2 = new Rotation(0, 5f, 0);
+		var rotation3 = new Rotation(0, 0, 5f);
+		var rotation4 = new Rotation(-3f, -3f, -3f);
+		var rotation5 = new Rotation(-4f, 0, 2f);
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 2, 3);
+		var vector3 = new Vector3(1, 0, -3);
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, rotation1, new Vector3(0, 0, 0)),
+			
+			new DstSrcOutPipe(vector2, rotation1, new Vector3(1.0f, 1.7309222f, 3.1628957f)),
+			new DstSrcOutPipe(vector2, rotation2, new Vector3(1.257662f, 2.0f, 2.9014285f)),
+			new DstSrcOutPipe(vector2, rotation3, new Vector3(0.8218832f, 2.079545f, 3.0f)),
+			new DstSrcOutPipe(vector2, rotation4, new Vector3(0.9518415f, 2.104529f, 2.94363f)),
+			new DstSrcOutPipe(vector2, rotation5, new Vector3(0.9260271f, 2.2379155f, 2.8520544f)),
+			
+			new DstSrcOutPipe(vector3, rotation1, new Vector3(1.0f, 0.26146722f, -2.988584f)),
+			new DstSrcOutPipe(vector3, rotation2, new Vector3(0.7347275f, 0.0f, -3.0757399f)),
+			new DstSrcOutPipe(vector3, rotation3, new Vector3(0.9961947f, 0.087155744f, -3.0f)),
+			new DstSrcOutPipe(vector3, rotation4, new Vector3(1.14995f, -0.21179451f, -2.9381554f)),
+			new DstSrcOutPipe(vector3, rotation5, new Vector3(1.0030423f, -0.17428517f, -2.9939163f))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "rotate", tests);
 	}
 //	public void testAddVector()
 //	public void testAddValue()

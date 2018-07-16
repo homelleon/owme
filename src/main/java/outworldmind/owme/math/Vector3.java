@@ -112,16 +112,16 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3 rotate(Rotation rotation) {
-		rotate(rotation.x, new Rotation(1, 0, 0));
-		rotate(rotation.y, new Rotation(0, 1, 0));
-		rotate(rotation.z, new Rotation(0, 0, 1));
+		rotate(rotation.x, new Rotation(1f, 0f, 0f));
+		rotate(rotation.y, new Rotation(0f, 1f, 0f));
+		rotate(rotation.z, new Rotation(0f, 0f, 1f));
 		
 		return this;
 	}
 	
 	public Vector3 rotate(Float angle, Vector3 axis) {
-		var sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2));
-		var cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2));
+		var sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2f));
+		var cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2f));
 		
 		var rX = axis.x * sinHalfAngle;
 		var rY = axis.y * sinHalfAngle;
