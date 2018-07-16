@@ -64,7 +64,11 @@ public class Quaternion {
 	}
 	
 	public Quaternion conjugate() {
-		return new Quaternion (-x, -y, -z, w);
+		x = -x;
+		y = -y;
+		z = -z;
+		
+		return this;
 	}
 	
 	private void set(float x, float y, float z, float w) {
@@ -179,6 +183,10 @@ public class Quaternion {
 		}
 		result.normalize();
 		return result;
+	}
+	
+	public Quaternion clone() {
+		return new Quaternion(this);
 	}
 
 }

@@ -9,13 +9,11 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3(Float x, Float y, Float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		set(x, y, z);
 	}
 	
 	public Vector3(Integer x, Integer y, Integer z) {
-		this((float) x, (float) y, (float) z);
+		set((float) x, (float) y, (float) z);
 	}
 	
 	public Vector3(Vector3 vector) {
@@ -23,15 +21,41 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}	
 	
 	public Vector3(Vector4 plane) {
-		x = plane.x;
-		y = plane.y;
-		z = plane.z;
-	}	
+		copy(plane);
+	}
+	
+	public Vector3(Quaternion q) {
+		copy(q);
+	}
+	
+	public Vector3 set(Float x, Float y, Float z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		
+		return this;
+	}
 
 	public Vector3 copy(Vector3 vector) {
 		x = vector.x;
 		y = vector.y;
 		z = vector.z;
+		
+		return this;
+	}
+	
+	public Vector3 copy(Vector4 plane) {
+		x = plane.x;
+		y = plane.y;
+		z = plane.z;
+		
+		return this;
+	}
+	
+	public Vector3 copy(Quaternion q) {
+		x = q.x;
+		y = q.y;
+		z = q.z;
 		
 		return this;
 	}
@@ -88,44 +112,26 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3 rotate(Rotation rotation) {
-		float sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2));
-		float cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2));
-		
-		float rX = axis.x * (float) Math.sin(Math.toRadians(angle / 2));
-		float rY = axis.y * (float) Math.sin(Math.toRadians(angle / 2));
-		float rZ = axis.z * (float) Math.sin(Math.toRadians(angle / 2));
-		float rW = (float) Math.cos(Math.toRadians(angle / 2));
-		
-		Quaternion rotation = new Quaternion(rX, rY, rZ, rW);
-		Quaternion conjugate = rotation.conjugate();
-		
-		Quaternion w = rotation.mul(this).mul(conjugate);
-		
-		x = w.x;
-		y = w.y;
-		z = w.z;
+		rotate(rotation.x, new Rotation(1, 0, 0));
+		rotate(rotation.y, new Rotation(0, 1, 0));
+		rotate(rotation.z, new Rotation(0, 0, 1));
 		
 		return this;
 	}
 	
-	// TODO: make it with one arg - rotation
 	public Vector3 rotate(Float angle, Vector3 axis) {
-		float sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2));
-		float cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2));
+		var sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2));
+		var cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2));
 		
-		float rX = axis.x * sinHalfAngle;
-		float rY = axis.y * sinHalfAngle;
-		float rZ = axis.z * sinHalfAngle;
-		float rW = cosHalfAngle;
+		var rX = axis.x * sinHalfAngle;
+		var rY = axis.y * sinHalfAngle;
+		var rZ = axis.z * sinHalfAngle;
+		var rW = cosHalfAngle;
 		
-		Quaternion rotation = new Quaternion(rX, rY, rZ, rW);
-		Quaternion conjugate = rotation.conjugate();
+		var rotationQ = new Quaternion(rX, rY, rZ, rW);
+		var conjugateQ = rotationQ.clone().conjugate();
 		
-		Quaternion w = rotation.mul(this).mul(conjugate);
-		
-		x = w.x;
-		y = w.y;
-		z = w.z;
+		copy(rotationQ.mul(this).mul(conjugateQ));
 		
 		return this;
 	}
