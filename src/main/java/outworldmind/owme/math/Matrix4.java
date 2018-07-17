@@ -158,7 +158,7 @@ public class Matrix4 {
 		return this;
 	}
 	
-	public Matrix4 rotate(Vector3 rotation) {
+	public Matrix4 rotate(Rotation rotation) {
 		var rx = new Matrix4();
 		var ry = new Matrix4();
 		var rz = new Matrix4();

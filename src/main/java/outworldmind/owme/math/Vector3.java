@@ -124,7 +124,7 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3 rotate(Float angle, Vector3 axis) {
-		var rotation = new Matrix4().rotate(angle, axis);
+		var rotation = new Matrix4().setIdentity().rotate(angle, axis);
 		copy(rotation.mul(this));
 //		var sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2f));
 //		var cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2f));
