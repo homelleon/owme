@@ -1,5 +1,7 @@
 package outworldmind.owme.math;
 
+import outworldmind.owme.core.Console;
+
 public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	
 	public float x, y, z;
@@ -115,7 +117,7 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
-	public Vector3 rotate(Rotation rotation) {
+	public Vector3 rotate(Vector3 rotation) {
 		rotate(rotation.x, new Rotation(1f, 0f, 0f));
 		rotate(rotation.y, new Rotation(0f, 1f, 0f));
 		rotate(rotation.z, new Rotation(0f, 0f, 1f));
@@ -123,22 +125,28 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
+	public Vector3 rotate(Rotation rotation) {		
+		return rotate((Vector3) rotation);
+	}
+	
 	public Vector3 rotate(Float angle, Vector3 axis) {
-		var rotation = new Matrix4().setIdentity().rotate(angle, axis);
-		copy(rotation.mul(this));
-//		var sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2f));
-//		var cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2f));
-//		
-//		var rX = axis.x * sinHalfAngle;
-//		var rY = axis.y * sinHalfAngle;
-//		var rZ = axis.z * sinHalfAngle;
-//		var rW = cosHalfAngle;
-//		
-//		var rotationQ = new Quaternion(rX, rY, rZ, rW);
-//		var conjugateQ = rotationQ.clone().conjugate();
-//		
-//		copy(rotationQ.mul(this).mul(conjugateQ));
+//		var rotation = new Matrix4().rotate((float) Math.toRadians(angle), axis);
+//		var rotation = new Matrix4().rotate(axis.clone().mul(angle));
+//		Console.log(rotation.toString());
+//		copy(rotation.mul(this));
+		var sinHalfAngle = (float) Math.sin(Math.toRadians(angle / 2f));
+		var cosHalfAngle = (float) Math.cos(Math.toRadians(angle / 2f));
 		
+		var rX = axis.x * sinHalfAngle;
+		var rY = axis.y * sinHalfAngle;
+		var rZ = axis.z * sinHalfAngle;
+		var rW = cosHalfAngle;
+//		
+		var rotationQ = new Quaternion(rX, rY, rZ, rW);
+		var conjugateQ = rotationQ.clone().conjugate();
+		
+		copy(rotationQ.mul(this).mul(conjugateQ));
+//		
 		return this;
 	}
 	

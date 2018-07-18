@@ -3,9 +3,18 @@ package outworldmind.owme.math;
 public class Maths {
 	
 	public static final float LOSS_OF_PRECISION = 0.000001f;
+	public static final float PI = 3.14f;
 	
 	public static boolean equal(float a, float b) {
 		return (Math.abs(a - b) <= LOSS_OF_PRECISION);
+	}
+	
+	public static float degToRad(float angle) {
+		return angle * (PI / 180);
+	}
+	
+	public static float radToDeg(float radian) {
+		return (radian * 180) / PI;
 	}
 
 	public static Matrix4 createTransformationMatrix(Vector2 translation, Vector2 scale) {

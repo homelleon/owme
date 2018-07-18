@@ -158,31 +158,31 @@ public class Matrix4 {
 		return this;
 	}
 	
-	public Matrix4 rotate(Rotation rotation) {
+	public Matrix4 rotate(Vector3 rotation) {
 		var rx = new Matrix4();
 		var ry = new Matrix4();
 		var rz = new Matrix4();
 		
-		var x = (float) Math.toRadians(rotation.x);
-		var y = (float) Math.toRadians(rotation.y);
-		var z = (float) Math.toRadians(rotation.z);
+		var x = (float) rotation.x;
+		var y = (float) rotation.y;
+		var z = (float) rotation.z;
 		
-		rz.m[0][0] = (float)Math.cos(z); rz.m[0][1] = -(float)Math.sin(z); 	 rz.m[0][2] = 0; 				   rz.m[0][3] = 0;
-		rz.m[1][0] = (float)Math.sin(z); rz.m[1][1] = (float)Math.cos(z);  	 rz.m[1][2] = 0; 				   rz.m[1][3] = 0;
-		rz.m[2][0] = 0; 				 rz.m[2][1] = 0; 				   	 rz.m[2][2] = 1; 				   rz.m[2][3] = 0;
-		rz.m[3][0] = 0; 				 rz.m[3][1] = 0; 				   	 rz.m[3][2] = 0; 				   rz.m[3][3] = 1;
+		rz.m[0][0] = (float) Math.cos(z);  rz.m[0][1] = -(float) Math.sin(z); 	 rz.m[0][2] = 0; 				    rz.m[0][3] = 0;
+		rz.m[1][0] = (float) Math.sin(z);  rz.m[1][1] =  (float) Math.cos(z);  	 rz.m[1][2] = 0; 				    rz.m[1][3] = 0;
+		rz.m[2][0] = 0; 				   rz.m[2][1] = 0; 				   	     rz.m[2][2] = 1; 				    rz.m[2][3] = 0;
+		rz.m[3][0] = 0; 				   rz.m[3][1] = 0; 				   	     rz.m[3][2] = 0; 				    rz.m[3][3] = 1;
 		
-		rx.m[0][0] = 1; 				 rx.m[0][1] = 0;					 rx.m[0][2] = 0; 				   rx.m[0][3] = 0;
-		rx.m[1][0] = 0; 				 rx.m[1][1] = (float)Math.cos(x); 	 rx.m[1][2] = -(float)Math.sin(x); rx.m[1][3] = 0;
-		rx.m[2][0] = 0; 				 rx.m[2][1] = (float)Math.sin(x); 	 rx.m[2][2] = (float)Math.cos(x);  rx.m[2][3] = 0;
-		rx.m[3][0] = 0; 				 rx.m[3][1] = 0; 				 	 rx.m[3][2] = 0;				   rx.m[3][3] = 1;
+		rx.m[0][0] = 1; 				   rx.m[0][1] = 0;					     rx.m[0][2] = 0; 				    rx.m[0][3] = 0;
+		rx.m[1][0] = 0; 				   rx.m[1][1] = (float) Math.cos(x); 	 rx.m[1][2] = -(float) Math.sin(x);  rx.m[1][3] = 0;
+		rx.m[2][0] = 0; 				   rx.m[2][1] = (float) Math.sin(x); 	 rx.m[2][2] =  (float) Math.cos(x);  rx.m[2][3] = 0;
+		rx.m[3][0] = 0; 				   rx.m[3][1] = 0; 				 	     rx.m[3][2] = 0;				    rx.m[3][3] = 1;
 		
-		ry.m[0][0] = (float)Math.cos(y); ry.m[0][1] = 0; 					 ry.m[0][2] = (float)Math.sin(y);  ry.m[0][3] = 0;
-		ry.m[1][0] = 0; 				 ry.m[1][1] = 1; 				 	 ry.m[1][2] = 0; 				   ry.m[1][3] = 0;
-		ry.m[2][0] = -(float)Math.sin(y);ry.m[2][1] = 0;					 ry.m[2][2] = (float)Math.cos(y);  ry.m[2][3] = 0;
-		ry.m[3][0] = 0; 				 ry.m[3][1] = 0; 					 ry.m[3][2] = 0; 				   ry.m[3][3] = 1;
+		ry.m[0][0] = (float) Math.cos(y);  ry.m[0][1] = 0; 					     ry.m[0][2] = (float) Math.sin(y);   ry.m[0][3] = 0;
+		ry.m[1][0] =  0; 				   ry.m[1][1] = 1; 				 	     ry.m[1][2] = 0; 				    ry.m[1][3] = 0;
+		ry.m[2][0] = -(float) Math.sin(y); ry.m[2][1] = 0;					     ry.m[2][2] = (float) Math.cos(y);   ry.m[2][3] = 0;
+		ry.m[3][0] =  0; 				   ry.m[3][1] = 0; 					     ry.m[3][2] = 0; 				    ry.m[3][3] = 1;
 	
-		m =  rz.mul(ry.mul(rx)).m;
+		copy(rz.mul(ry.mul(rx)));
 		
 		return this;
 	}
@@ -191,6 +191,7 @@ public class Matrix4 {
 		var c = (float) Math.cos(angle);
 		var s = (float) Math.sin(angle);
 		var oneminusc = 1.0f - c;
+		
 		var xy = axis.x * axis.y;
 		var yz = axis.y * axis.z;
 		var xz = axis.x * axis.z;
@@ -344,12 +345,12 @@ public class Matrix4 {
 	}
 	
 	public Vector3 mul(Vector3 vector) {
-		var x = m[0][0] * vector.x + m[0][1] * vector.y + m[0][2] * vector.z + m[0][3] * 1.0;
-		var y = m[1][0] * vector.x + m[1][1] * vector.y + m[1][2] * vector.z + m[1][3] * 1.0; 
-		var z = m[2][0] * vector.x + m[2][1] * vector.y + m[2][2] * vector.z + m[2][3] * 1.0;
-		var w = m[3][0] * vector.x + m[3][1] * vector.y + m[3][2] * vector.z + m[3][3] * 1.0;
+		var x = m[0][0] * vector.x + m[0][1] * vector.y + m[0][2] * vector.z + m[0][3];
+		var y = m[1][0] * vector.x + m[1][1] * vector.y + m[1][2] * vector.z + m[1][3]; 
+		var z = m[2][0] * vector.x + m[2][1] * vector.y + m[2][2] * vector.z + m[2][3];
+		var w = 1 / (m[3][0] * vector.x + m[3][1] * vector.y + m[3][2] * vector.z + m[3][3]);
 				
-		return new Vector3(x / w, y / w, z / w);
+		return new Vector3(x * w, y * w, z * w);
 	}
 	
 	public Quaternion mul(Quaternion q)	{
