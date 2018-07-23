@@ -3,6 +3,7 @@ package outworldmind.owme.tool;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.Console;
 import java.lang.reflect.InvocationTargetException;
 import java.util.stream.Stream;
 
@@ -50,6 +51,8 @@ public class TestAssistant {
 							check = (Boolean) objectClass.getMethod("equals", objectClass).invoke(actual, expected);
 						else if (actual instanceof Float && expected instanceof Float)
 							check = Maths.equal((float) actual, (float) expected);
+						else if (actual instanceof Exception)
+							check = actual.getClass() == expected.getClass();
 						else
 							check = actual.equals(expected);
 						
@@ -63,8 +66,9 @@ public class TestAssistant {
 							"; Expected: " + expected + " Actual: " + actual 
 						);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-							| NoSuchMethodException | SecurityException e) {
+							| NoSuchMethodException | SecurityException | NullPointerException e) {
 						e.printStackTrace();
+						Console.log(e.getCause());
 					}
 				})
 			);

@@ -50,16 +50,16 @@ public class Vector3Test {
 		tester.testCross();
 		tester.testScale();
 		tester.testNormalize();
-		tester.testRotateAngle();
-		tester.testRotateRotation();
-//		tester.testAddVector();
-//		tester.testAddValue();
-//		tester.testSubVector();
-//		tester.testSubValue();
-//		tester.testMulVector();
-//		tester.testMulValue();
-//		tester.testDivVector();
-//		tester.testDivValue();
+//		tester.testRotateAngle();
+//		tester.testRotateRotation();
+		tester.testAddVector();
+		tester.testAddValue();
+		tester.testSubVector();
+		tester.testSubValue();
+		tester.testMulVector();
+		tester.testMulValue();
+		tester.testDivVector();
+		tester.testDivValue();
 //		tester.testAbs();		
 	}
 
@@ -415,13 +415,131 @@ class Vector3OperationsTester {
 		
 		TestAssistant.testVector3MethodByName(className, "rotate", tests);
 	}
-//	public void testAddVector()
-//	public void testAddValue()
-//	public void testSubVector()
-//	public void testSubValue()
-//	public void testMulVector()
-//	public void testMulValue()
-//	public void testDivVector()
-//	public void testDivValue()
+	
+	public void testAddVector() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 2, 3);
+		var vector3 = new Vector3(1, 0, -3);
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, vector2, new Vector3(1, 2, 3)),
+			new DstSrcOutPipe(vector2, vector3, new Vector3(2, 2, 0))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "add", tests);
+	}
+	
+	public void testAddValue() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 0, -3);
+		var value1 = 0.0f;
+		var value2 = 11.0f;
+		var value3 = -3.0f;
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, value1, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector1, value2, new Vector3(11, 11, 11)),
+			new DstSrcOutPipe(vector1, value3, new Vector3(-3, -3, -3)),
+			new DstSrcOutPipe(vector2, value1, new Vector3(1, 0, -3)),
+			new DstSrcOutPipe(vector2, value2, new Vector3(12, 11, 8)),
+			new DstSrcOutPipe(vector2, value3, new Vector3(-2, -3, -6))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "add", tests);		
+	}
+	
+	public void testSubVector() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 2, 3);
+		var vector3 = new Vector3(1, 0, -3);
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, vector2, new Vector3(-1, -2, -3)),
+			new DstSrcOutPipe(vector2, vector3, new Vector3(0, 2, 6))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "sub", tests);
+	}
+	
+	public void testSubValue() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 0, -3);
+		var value1 = 0.0f;
+		var value2 = 11.0f;
+		var value3 = -3.0f;
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, value1, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector1, value2, new Vector3(-11, -11, -11)),
+			new DstSrcOutPipe(vector1, value3, new Vector3(3, 3, 3)),
+			new DstSrcOutPipe(vector2, value1, new Vector3(1, 0, -3)),
+			new DstSrcOutPipe(vector2, value2, new Vector3(-10, -11, -14)),
+			new DstSrcOutPipe(vector2, value3, new Vector3(4, 3, 0))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "sub", tests);	
+	}
+	
+	public void testMulVector() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 2, 3);
+		var vector3 = new Vector3(1, 0, -3);
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, vector2, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector2, vector3, new Vector3(1, 0, -9))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "mul", tests);
+	}
+	
+	public void testMulValue() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 0, -3);
+		var value1 = 0.0f;
+		var value2 = 11.0f;
+		var value3 = -3.0f;
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, value1, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector1, value2, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector1, value3, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector2, value1, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector2, value2, new Vector3(11, 0, -33)),
+			new DstSrcOutPipe(vector2, value3, new Vector3(-3, 0, 9))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "mul", tests);
+	}
+	
+	public void testDivVector() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 2, 3);
+		var vector3 = new Vector3(1, 0, -3);
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, vector2, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector2, vector3, new NullPointerException("Vector3.div - divide by zero.")),
+			new DstSrcOutPipe(vector3, vector2, new Vector3(1, 0, -1))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "div", tests);
+	}
+	
+	public void testDivValue() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 0, -3);
+		var value1 = 0.0f;
+		var value2 = 11.0f;
+		var value3 = -3.0f;
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, value1, new NullPointerException("Vector3.div - divide by zero.")),
+			new DstSrcOutPipe(vector1, value2, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector1, value3, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector2, value1, new NullPointerException("Vector3.div - divide by zero.")),
+			new DstSrcOutPipe(vector2, value2, new Vector3(0.0909090909090909f, 0.0f, -0.2727272727272727f)),
+			new DstSrcOutPipe(vector2, value3, new Vector3(0.3333333333333333f, 0.0f, 1.0f))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "div", tests);
+	}
+	
 //	public void testAbs()
 }

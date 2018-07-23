@@ -39,6 +39,14 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		
 		return this;
 	}
+	
+	public Vector3 set(Float value) {
+		this.x = value;
+		this.y = value;
+		this.z = value;
+		
+		return this;
+	}
 
 	public Vector3 copy(Vector3 vector) {
 		x = vector.x;
@@ -158,6 +166,14 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
+	public Vector3 add(Double value) {
+		return add(value.floatValue());
+	}
+	
+	public Vector3 add(Integer value) {
+		return add(value.floatValue());
+	}
+	
 	
 	public Vector3 sub(Vector3 vector) {
 		x -= vector.x;
@@ -173,6 +189,14 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		z -= value;
 		
 		return this;
+	}
+	
+	public Vector3 sub(Integer value) {
+		return sub(value.floatValue());
+	}
+	
+	public Vector3 sub(Double value) {
+		return sub(value.floatValue());
 	}
 	
 	public Vector3 mul(Vector3 vector) {
@@ -191,7 +215,18 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
+	public Vector3 mul(Integer value) {
+		return mul(value.floatValue());
+	}
+	
+	public Vector3 mul(Double value) {
+		return mul(value.floatValue());
+	}
+	
 	public Vector3 div(Vector3 vector) {
+		if (vector.x == 0.0f || vector.y == 0.0f || vector.z == 0.0f)
+			throw new NullPointerException("Vector3.div - divide by zero.");
+		
 		x /= vector.x;
 		y /= vector.y;
 		z /= vector.z;
@@ -200,11 +235,22 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3 div(Float value) {
+		if (value == 0.0f)
+			throw new NullPointerException("Vector3.div - divide by zero.");
+		
 		x /= value;
 		y /= value;
 		z /= value;
 		
 		return this;
+	}
+	
+	public Vector3 div(Integer value) {
+		return div(value.floatValue());
+	}
+	
+	public Vector3 div(Double value) {
+		return div(value.floatValue());
 	}
 	
 	public Vector3 abs() {

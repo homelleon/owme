@@ -344,12 +344,11 @@ public class Matrix4 {
 	}
 	
 	public Vector3 mul(Vector3 vector) {
-		var x = m[0][0] * vector.x + m[0][1] * vector.y + m[0][2] * vector.z + m[0][3] * 1.0;
-		var y = m[1][0] * vector.x + m[1][1] * vector.y + m[1][2] * vector.z + m[1][3] * 1.0; 
-		var z = m[2][0] * vector.x + m[2][1] * vector.y + m[2][2] * vector.z + m[2][3] * 1.0;
-		var w = m[3][0] * vector.x + m[3][1] * vector.y + m[3][2] * vector.z + m[3][3] * 1.0;
+		var x = m[0][0] * vector.x + m[0][1] * vector.y + m[0][2] * vector.z;
+		var y = m[1][0] * vector.x + m[1][1] * vector.y + m[1][2] * vector.z; 
+		var z = m[2][0] * vector.x + m[2][1] * vector.y + m[2][2] * vector.z;
 				
-		return new Vector3(x / w, y / w, z / w);
+		return new Vector3(x, y, z);
 	}
 	
 	public Quaternion mul(Quaternion q)	{
