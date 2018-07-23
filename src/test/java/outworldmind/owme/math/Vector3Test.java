@@ -515,7 +515,7 @@ class Vector3OperationsTester {
 		var vector3 = new Vector3(1, 0, -3);
 		var tests = Stream.of(
 			new DstSrcOutPipe(vector1, vector2, new Vector3(0, 0, 0)),
-			new DstSrcOutPipe(vector2, vector3, new NullPointerException("Vector3.div - divide by zero.")),
+			new DstSrcOutPipe(vector2, vector3, "Vector3.div - divide by zero."),
 			new DstSrcOutPipe(vector3, vector2, new Vector3(1, 0, -1))
 		);
 		
@@ -530,12 +530,12 @@ class Vector3OperationsTester {
 		var value3 = -3.0f;
 		
 		var tests = Stream.of(
-			new DstSrcOutPipe(vector1, value1, new NullPointerException("Vector3.div - divide by zero.")),
+			new DstSrcOutPipe(vector1, value1, "Vector3.div - divide by zero."),
 			new DstSrcOutPipe(vector1, value2, new Vector3(0, 0, 0)),
 			new DstSrcOutPipe(vector1, value3, new Vector3(0, 0, 0)),
-			new DstSrcOutPipe(vector2, value1, new NullPointerException("Vector3.div - divide by zero.")),
+			new DstSrcOutPipe(vector2, value1, "Vector3.div - divide by zero."),
 			new DstSrcOutPipe(vector2, value2, new Vector3(0.0909090909090909f, 0.0f, -0.2727272727272727f)),
-			new DstSrcOutPipe(vector2, value3, new Vector3(0.3333333333333333f, 0.0f, 1.0f))
+			new DstSrcOutPipe(vector2, value3, new Vector3(-0.3333333333333333f, 0.0f, 1.0f))
 		);
 		
 		TestAssistant.testVector3MethodByName(className, "div", tests);

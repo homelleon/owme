@@ -1,12 +1,13 @@
 package outworldmind.owme.tool;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.Console;
 import java.lang.reflect.InvocationTargetException;
 import java.util.stream.Stream;
 
+import outworldmind.owme.core.Console;
 import outworldmind.owme.math.Maths;
 import outworldmind.owme.math.Vector;
 import outworldmind.owme.math.Vector2;
@@ -65,10 +66,11 @@ public class TestAssistant {
 										(" with arg: " + source))) + 
 							"; Expected: " + expected + " Actual: " + actual 
 						);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					} catch (IllegalAccessException | IllegalArgumentException
 							| NoSuchMethodException | SecurityException | NullPointerException e) {
 						e.printStackTrace();
-						Console.log(e.getCause());
+					} catch (InvocationTargetException e) {
+						assertSame(pipe.getOutput(), e.getCause().getMessage());
 					}
 				})
 			);
