@@ -60,7 +60,7 @@ public class Vector3Test {
 		tester.testMulValue();
 		tester.testDivVector();
 		tester.testDivValue();
-//		tester.testAbs();		
+		tester.testAbs();		
 	}
 
 }
@@ -541,5 +541,15 @@ class Vector3OperationsTester {
 		TestAssistant.testVector3MethodByName(className, "div", tests);
 	}
 	
-//	public void testAbs()
+	public void testAbs() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 0, -3);
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, null, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector2, null, new Vector3(1, 0, 3))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "abs", tests);
+	}
 }
