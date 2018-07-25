@@ -38,8 +38,7 @@ public class TestAssistant {
 								objectClass.getMethod(name).invoke(dest) :
 								(source instanceof Object[] ?
 										objectClass.getMethod(name, 
-												((Object[]) source)[0].getClass(), 
-												((Object[]) source)[1].getClass())
+												Stream.of(source).map(m -> m.getClass()))
 										.invoke(dest.clone(), 
 												((Object[]) source)[0], 
 												((Object[]) source)[1])
@@ -62,7 +61,7 @@ public class TestAssistant {
 							messageVerb + " for " + dest + 
 							(source == null ? "" : 
 								(source instanceof Object[] ? 
-										(" with arg: " + ((Object[]) source)[0] + ", " +  ((Object[]) source)[1]) :
+										(" with arg: " + ((Object[]) source).toString()) :
 										(" with arg: " + source))) + 
 							"; Expected: " + expected + " Actual: " + actual 
 						);

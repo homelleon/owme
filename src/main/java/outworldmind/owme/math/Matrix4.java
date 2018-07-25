@@ -3,51 +3,37 @@ package outworldmind.owme.math;
 import java.nio.FloatBuffer;
 
 
-public class Matrix4 {
+public class Matrix4 extends Matrix {
 
-	private final int size = 4;
+	public static final int SIZE = 4;
 	public float[][] m;
 	
 	public Matrix4() {
-		copy(new float[size][size]);
-		setIdentity();
+		super(SIZE);
 	}
 	
 	public Matrix4(Matrix4 matrix) {
+		super(SIZE);
 		copy(matrix.m.clone());
 	}
 	
-	
+	@Override
 	public Matrix4 copy(float[][] m) {
-		if (m.length != size || m[0].length != size)
-			throw new IllegalArgumentException("Matrix4.copy - size of array must be " + size);
-		
-		this.m = m.clone();
-		
-		return this;
+		return (Matrix4) super.copy(m);
 	}
-	
 	
 	public Matrix4 copy(Matrix4 matrix) {
-		m = matrix.m.clone();
-		
-		return this;
+		return copy(matrix.m.clone());
 	}
 	
+	@Override
 	public Matrix4 zero() {
-		for (int i = 0; i < size; i++)
-			for (int j = 0; j < size; j++)
-				m[i][j] = 0.0f;
-	
-		return this;
+		return (Matrix4) super.zero();
 	}
 	
+	@Override
 	public Matrix4 setIdentity() {
-		zero();
-		for (int i = 0; i < size; i++)
-			m[i][i] = 1.0f;
-	
-		return this;
+		return (Matrix4) super.setIdentity();
 	}
 	
 	public Matrix4 invert() {
@@ -237,25 +223,6 @@ public class Matrix4 {
 		return this;
 	}
 	
-	public Matrix4 scale(Vector3 scale) {
-		m[0][0] *= scale.x;
-		m[0][1] *= scale.x;
-		m[0][2] *= scale.x;
-		m[0][3] *= scale.x;
-		m[1][0] *= scale.y;
-		m[1][1] *= scale.y;
-		m[1][2] *= scale.y;
-		m[1][3] *= scale.y;
-		m[2][0] *= scale.z;
-		m[2][1] *= scale.z;
-		m[2][2] *= scale.z;
-		m[2][3] *= scale.z;
-		
-		return this;
-	}
-	
-
-	
 	public Matrix4 Orthographic2D(int width, int height) {
 		setIdentity();
 		m[0][0] = 2f / (float) width; 
@@ -364,46 +331,42 @@ public class Matrix4 {
 		return result;
 	}
 	
+	public Matrix4 scale(Vector3 scale) {
+		m[0][0] *= scale.x;
+		m[0][1] *= scale.x;
+		m[0][2] *= scale.x;
+		m[0][3] *= scale.x;
+		m[1][0] *= scale.y;
+		m[1][1] *= scale.y;
+		m[1][2] *= scale.y;
+		m[1][3] *= scale.y;
+		m[2][0] *= scale.z;
+		m[2][1] *= scale.z;
+		m[2][2] *= scale.z;
+		m[2][3] *= scale.z;
+		
+		return this;
+	}
+	
+	@Override
 	public Matrix4 transpose() {
-		var result = new Matrix4();
-		
-		for (int i = 0; i < 4; i++)
-			for (int j = 0; j < 4; j++)
-				result.m[i][j] = m[j][i];
-		
-		copy(result);
-		
-		return this;
+		return (Matrix4) super.transpose();
 	}
 	
-	public boolean equals(Matrix4 matrix) {
-		for (int i = 0; i < size; i++)
-			for (int j = 0; j < size; j++)
-				if (!Maths.equal(m[i][j], matrix.m[i][j])) return false;
-		
-		return true;	
-	}
-	
+	@Override
 	public Matrix4 load(FloatBuffer buf) {
-		
-		for (var i = 0; i < size; i++)
-			for (var j = 0; j < size; j++)
-				m[i][j] = buf.get();
-
-		return this;
+		return (Matrix4) super.load(buf);
 	}
 	
+	@Override
 	public Matrix4 store(FloatBuffer buf) {
-		for (var i = 0; i < size; i++)
-			for (var j = 0; j < size; j++)
-				buf.put(m[i][j]);
-		
-		return this;
+		return (Matrix4) super.store(buf);
 	}
 	
 	/**
 	 * Verticle visualization
 	 */
+	@Override
 	public String toString() {
 		
 		return 	"|" + m[0][0] + " " + m[1][0] + " " + m[2][0] + " " + m[3][0] + "|\n" +

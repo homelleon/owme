@@ -33,6 +33,8 @@ public class Vector3Test {
 	public void testServiceMethods() {
 		var tester = new Vector3ServiceTester(CLASS_NAME);
 		tester.testEquals();
+		tester.testSetValue();
+		tester.testSetVector();
 		tester.testCopy();
 		tester.testCompareTo();
 		tester.testClone();
@@ -225,6 +227,40 @@ class Vector3ServiceTester {
 		);
 		
 		TestAssistant.testVector3MethodByName(className, "equals", tests);
+	}
+	
+	public void testSetValue() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 0, -3);
+		var value1 = 2.0f;
+		var value2 = -10f;
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, value1, new Vector3(2, 2, 2)),
+			new DstSrcOutPipe(vector1, value2, new Vector3(-10, -10, -10)),
+			new DstSrcOutPipe(vector2, value1, new Vector3(2, 2, 2)),
+			new DstSrcOutPipe(vector2, value2, new Vector3(-10, -10, -10))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "set", tests);
+	}
+	
+	public void testSetVector() {
+		var vector1 = new Vector3();
+		var vector2 = new Vector3(1, 2, 3);
+		var vector3 = new Vector3(1, 0, -3);
+		var value1 = new Float[] {0.0f, 0.0f, 0.0f};
+		var value2 = new Float[] {1.0f, 2.0f, 3.0f};
+		var value3 = new Float[] {1.0f, 0.0f, -3.0f};
+		
+		var tests = Stream.of(
+			new DstSrcOutPipe(vector1, value1, new Vector3(0, 0, 0)),
+			new DstSrcOutPipe(vector1, value2, new Vector3(1, 2, 3)),
+			new DstSrcOutPipe(vector2, value3, new Vector3(1, 0, -3)),
+			new DstSrcOutPipe(vector3, value2, new Vector3(1, 2, 3))
+		);
+		
+		TestAssistant.testVector3MethodByName(className, "set", tests);
 	}
 	
 	public void testCopy() {

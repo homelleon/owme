@@ -20,7 +20,6 @@ public class App {
     	var m = new Matrix4();
     	m.rotate(new Vector3(-3f, -3f, -3f));
     	Console.log(m.toString());
-
     	
     	while (true) {
     		engine.update((owme) -> {
