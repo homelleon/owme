@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.stream.Stream;
 
-import outworldmind.owme.core.Console;
 import outworldmind.owme.math.Maths;
 import outworldmind.owme.math.Vector;
 import outworldmind.owme.math.Vector2;
@@ -38,7 +37,10 @@ public class TestAssistant {
 								objectClass.getMethod(name).invoke(dest) :
 								(source instanceof Object[] ?
 										objectClass.getMethod(name, 
-												Stream.of(source).map(m -> m.getClass()))
+												(Class[]) Stream.of(source)
+													.map(m -> m.getClass())
+													.toArray()
+										)
 										.invoke(dest.clone(), 
 												((Object[]) source)[0], 
 												((Object[]) source)[1])
