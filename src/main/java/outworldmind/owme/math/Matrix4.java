@@ -153,20 +153,14 @@ public class Matrix4 extends Matrix {
 		var y = (float) rotation.y;
 		var z = (float) rotation.z;
 		
-		rz.m[0][0] = (float) Math.cos(z);  rz.m[0][1] = -(float) Math.sin(z); 	 rz.m[0][2] = 0; 				    rz.m[0][3] = 0;
-		rz.m[1][0] = (float) Math.sin(z);  rz.m[1][1] =  (float) Math.cos(z);  	 rz.m[1][2] = 0; 				    rz.m[1][3] = 0;
-		rz.m[2][0] = 0; 				   rz.m[2][1] = 0; 				   	     rz.m[2][2] = 1; 				    rz.m[2][3] = 0;
-		rz.m[3][0] = 0; 				   rz.m[3][1] = 0; 				   	     rz.m[3][2] = 0; 				    rz.m[3][3] = 1;
+		rz.m[0][0] =  (float) Math.cos(z);  rz.m[0][1] = -(float) Math.sin(z);
+		rz.m[1][0] =  (float) Math.sin(z);  rz.m[1][1] =  (float) Math.cos(z);	 
 		
-		rx.m[0][0] = 1; 				   rx.m[0][1] = 0;					     rx.m[0][2] = 0; 				    rx.m[0][3] = 0;
-		rx.m[1][0] = 0; 				   rx.m[1][1] = (float) Math.cos(x); 	 rx.m[1][2] = -(float) Math.sin(x);  rx.m[1][3] = 0;
-		rx.m[2][0] = 0; 				   rx.m[2][1] = (float) Math.sin(x); 	 rx.m[2][2] =  (float) Math.cos(x);  rx.m[2][3] = 0;
-		rx.m[3][0] = 0; 				   rx.m[3][1] = 0; 				 	     rx.m[3][2] = 0;				    rx.m[3][3] = 1;
+		rx.m[1][1] =  (float) Math.cos(x);  rx.m[1][2] = -(float) Math.sin(x); 
+		rx.m[2][1] =  (float) Math.sin(x);  rx.m[2][2] =  (float) Math.cos(x); 
 		
-		ry.m[0][0] = (float) Math.cos(y);  ry.m[0][1] = 0; 					     ry.m[0][2] = (float) Math.sin(y);   ry.m[0][3] = 0;
-		ry.m[1][0] =  0; 				   ry.m[1][1] = 1; 				 	     ry.m[1][2] = 0; 				    ry.m[1][3] = 0;
-		ry.m[2][0] = -(float) Math.sin(y); ry.m[2][1] = 0;					     ry.m[2][2] = (float) Math.cos(y);   ry.m[2][3] = 0;
-		ry.m[3][0] =  0; 				   ry.m[3][1] = 0; 					     ry.m[3][2] = 0; 				    ry.m[3][3] = 1;
+		ry.m[0][0] =  (float) Math.cos(y);  ry.m[0][2] =  (float) Math.sin(y);			     
+		ry.m[2][0] = -(float) Math.sin(y);  ry.m[2][2] =  (float) Math.cos(y);  
 	
 		copy(rz.mul(ry.mul(rx)));
 		
@@ -174,28 +168,28 @@ public class Matrix4 extends Matrix {
 	}
 	
 	public Matrix4 rotate(float angle, Vector3 axis) {		
-		var c = (float) Math.cos(angle);
-		var s = (float) Math.sin(angle);
-		var oneminusc = 1.0f - c;
+		var cos = (float) Math.cos(angle);
+		var sin = (float) Math.sin(angle);
+		var oneminusc = 1.0f - cos;
 		
 		var xy = axis.x * axis.y;
 		var yz = axis.y * axis.z;
 		var xz = axis.x * axis.z;
-		var xs = axis.x * s;
-		var ys = axis.y * s;
-		var zs = axis.z * s;
+		var xs = axis.x * sin;
+		var ys = axis.y * sin;
+		var zs = axis.z * sin;
 
-		var f00 = axis.x * axis.x * oneminusc + c;
+		var f00 = axis.x * axis.x * oneminusc + cos;
 		var f01 = xy * oneminusc + zs;
 		var f02 = xz * oneminusc - ys;
 		// n[3] not used
 		var f10 = xy * oneminusc - zs;
-		var f11 = axis.y * axis.y * oneminusc + c;
+		var f11 = axis.y * axis.y * oneminusc + cos;
 		var f12 = yz * oneminusc + xs;
 		// n[7] not used
 		var f20 = xz * oneminusc + ys;
 		var f21 = yz * oneminusc - xs;
-		var f22 = axis.z * axis.z * oneminusc + c;
+		var f22 = axis.z * axis.z * oneminusc + cos;
 
 		var t00 = m[0][0] * f00 + m[1][0] * f01 + m[2][0] * f02;
 		var t01 = m[0][1] * f00 + m[1][1] * f01 + m[2][1] * f02;

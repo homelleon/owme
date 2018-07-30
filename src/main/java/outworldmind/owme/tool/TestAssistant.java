@@ -36,15 +36,12 @@ public class TestAssistant {
 						var actual = source == null ?
 								objectClass.getMethod(name).invoke(dest) :
 								(source instanceof Object[] ?
-										objectClass.getMethod(name, 
-												(Class[]) Stream.of(source)
-													.map(m -> m.getClass())
-													.toArray()
+										objectClass.getMethod(name, Stream.of(source)
+													.map(Object::getClass).toArray(Class<?>[]::new)
 										)
-										.invoke(dest.clone(), 
-												((Object[]) source)[0], 
-												((Object[]) source)[1])
-										: objectClass.getMethod(name, source.getClass()).invoke(dest.clone(), source));
+										.invoke(dest.clone(), source)
+										: objectClass.getMethod(name, source.getClass())
+										.invoke(dest.clone(), source));
 						
 						var messageVerb = name.toUpperCase().substring(0, 1) + name.substring(1, name.length()); 
 						Boolean check = false;

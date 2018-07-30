@@ -29,6 +29,12 @@ public abstract class Transform {
 		return this;
 	}
 	
+	public Transform offsetPosition(Vector3 position) {
+		this.position.add(position);
+		
+		return this;
+	}
+	
 	public Vector3 getScale() {
 		return scale;
 	}
@@ -45,6 +51,12 @@ public abstract class Transform {
 	
 	public Transform setRotation(Rotation rotation) {
 		this.rotation = rotation;
+		
+		return this;
+	}
+	
+	public Transform offsetRotation(Rotation rotation) {
+		this.rotation.add(rotation);
 		
 		return this;
 	}
