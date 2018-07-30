@@ -38,8 +38,8 @@ public class TestAssistant {
 								(source instanceof Object[] ?
 										objectClass.getMethod(name, 
 												(Class[]) Stream.of(source)
-													.map(m -> m.getClass())
-													.toArray()
+													.map(Object::getClass)
+													.toArray(Class<?>[]::new)
 										)
 										.invoke(dest.clone(), 
 												((Object[]) source)[0], 

@@ -32,6 +32,30 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		copy(q);
 	}
 	
+	public static Vector3 front() {
+		return new Vector3(0, 0, 1);
+	}
+	
+	public static Vector3 back() {
+		return new Vector3(0, 0, -1);
+	}
+	
+	public static Vector3 left() {
+		return new Vector3(-1, 0, 0);
+	}
+	
+	public static Vector3 right() {
+		return new Vector3(1, 0, 0);
+	}
+	
+	public static Vector3 top() {
+		return new Vector3(0, 1, 0);
+	}
+	
+	public static Vector3 bottom() {
+		return new Vector3(0, -1, 0);
+	}
+	
 	public Vector3 set(Float x, Float y, Float z) {
 		this.x = x;
 		this.y = y;
