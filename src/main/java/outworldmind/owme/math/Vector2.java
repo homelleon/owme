@@ -21,6 +21,22 @@ public class Vector2 extends Vector<Vector2> {
 		copy(vector);
 	}
 	
+	public static Vector2 up() {
+		return new Vector2(0, 1);
+	}
+	
+	public static Vector2 down() {
+		return new Vector2(0, -1);
+	}
+	
+	public static Vector2 left() {
+		return new Vector2(-1, 0);
+	}
+	
+	public static Vector2 right() {
+		return new Vector2(1, 0);
+	}
+	
 	public Vector2 copy(Vector2 vector) {
 		x = vector.x;
 		y = vector.y;

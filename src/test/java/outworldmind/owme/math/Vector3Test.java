@@ -249,9 +249,9 @@ class Vector3ServiceTester {
 		var vector1 = new Vector3();
 		var vector2 = new Vector3(1, 2, 3);
 		var vector3 = new Vector3(1, 0, -3);
-		var value1 = new Float[] {0.0f, 0.0f, 0.0f};
-		var value2 = new Float[] {1.0f, 2.0f, 3.0f};
-		var value3 = new Float[] {1.0f, 0.0f, -3.0f};
+		var value1 = new Object[] {0.0f, 0.0f, 0.0f};
+		var value2 = new Object[] {1.0f, 2.0f, 3.0f};
+		var value3 = new Object[] {1.0f, 0.0f, -3.0f};
 		
 		var tests = Stream.of(
 			new DstSrcOutPipe(vector1, value1, new Vector3(0, 0, 0)),
