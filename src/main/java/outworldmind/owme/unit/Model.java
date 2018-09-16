@@ -1,11 +1,15 @@
 package outworldmind.owme.unit;
 
+import outworldmind.owme.core.Renderer;
+import outworldmind.owme.shader.Shader;
 import outworldmind.owme.tool.NumberGenerator;
 
 public class Model {
 	
 	private int id;
-	private Mesh mesh;
+	private Geometry geometry;
+	private Shader shader;
+	private Renderer renderer;
 	private Material material;
 	
 	public Model() {
@@ -19,17 +23,37 @@ public class Model {
 	public int getId() {
 		return id;
 	}
-	
-	public Mesh getMesh() {
-		return mesh;
-	}
-	
-	public Model setMesh(Mesh mesh) {
-		this.mesh = mesh;
+	public Model setGeometry(Geometry geometry) {
+		this.geometry = geometry;
 		
 		return this;
 	}
 	
+	public Geometry getGeometry() {
+		return geometry;
+	}
+	
+	
+	public Shader getShader() {
+		return shader;
+	}
+
+	public Model setShader(Shader shader) {
+		this.shader = shader;
+		
+		return this;
+	}
+
+	public Renderer getRenderer() {
+		return renderer;
+	}
+
+	public Model setRenderer(Renderer renderer) {
+		this.renderer = renderer;
+		
+		return this;
+	}
+
 	public Model setMaterial(Material material) {
 		this.material = material;
 		

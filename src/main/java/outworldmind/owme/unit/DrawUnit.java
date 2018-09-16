@@ -2,7 +2,7 @@ package outworldmind.owme.unit;
 
 public class DrawUnit extends SceneUnit {
 	
-	private Model model;
+	private Model model = null;
 	
 	public Model getModel() {
 		return model;

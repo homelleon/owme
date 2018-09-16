@@ -1,5 +1,9 @@
 package outworldmind.owme.unit;
 
-public class Geometry {
-
+public interface Geometry {
+	
+	public void bind();
+	public void unbind();
+	public void delete();
+	
 }
