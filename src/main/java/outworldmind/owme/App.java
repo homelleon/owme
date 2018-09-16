@@ -3,7 +3,6 @@ package outworldmind.owme;
 import outworldmind.owme.core.Config;
 import outworldmind.owme.core.Console;
 import outworldmind.owme.core.Engine;
-import outworldmind.owme.math.Maths;
 import outworldmind.owme.math.Matrix4;
 import outworldmind.owme.math.Vector3;
 

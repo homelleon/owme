@@ -6,7 +6,6 @@ import java.nio.FloatBuffer;
 public class Matrix4 extends Matrix {
 
 	public static final int SIZE = 4;
-	public float[][] m;
 	
 	public Matrix4() {
 		super(SIZE);
