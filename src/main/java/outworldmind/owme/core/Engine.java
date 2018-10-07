@@ -1,7 +1,5 @@
 package outworldmind.owme.core;
 
-import java.util.function.Function;
-
 public class Engine {
 	
 	public final static String PARAM_WINDOW_NAME = "window.name";
@@ -11,7 +9,6 @@ public class Engine {
 	public final static String PARAM_STRING = "java.lang.String";
 	
 	private Config config;
-	private Renderer renderer;
 	private Window window;
 	private ConfigValidator validator;
 	
@@ -23,15 +20,10 @@ public class Engine {
 		return window;
 	}
 	
-	public Renderer getRenderer() {
-		return renderer;
-	}
-	
 	public void initialize() {
 		initValidator();
 		validateConfig();
 		initWindow();
-		initRenderer();
 	}
 	
 	private void initValidator() {
@@ -62,12 +54,7 @@ public class Engine {
 		window = new Window((String) name, (int) width, (int) height);
 	}
 	
-	private void initRenderer() {
-		renderer = new Renderer();
-	}
-	
-	public void update(Function<Engine, Void> onUpdate) {
-		onUpdate.apply(this);
+	public void update() {
 		window.update();
 	}
 	
