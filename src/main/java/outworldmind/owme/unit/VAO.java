@@ -3,6 +3,7 @@ package outworldmind.owme.unit;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -12,6 +13,7 @@ public class VAO implements Geometry {
 	private final int id;
 	private List<VBO> vbos;
 	private VBO indicies = null;
+	private int size;
 	
 	private VAO(int id) {
 		this.id = id;
@@ -38,10 +40,11 @@ public class VAO implements Geometry {
 		indicies = vbo;
 	}
 	
-	public void createBuffer(float[] bufferData) {
-		var vbo = VBO.create(GL15.GL_ELEMENT_ARRAY_BUFFER);
+	public void createBuffer(int attribute, int dimention, float[] bufferData) {
+		var vbo = VBO.create(GL15.GL_ARRAY_BUFFER);
 		vbo.bind();
 		vbo.storeData(bufferData);
+		GL20.glVertexAttribPointer(attribute, dimention, GL11.GL_FLOAT, false, dimention * 4, 0);
 		vbos.add(vbo);
 	}
 	
@@ -57,6 +60,11 @@ public class VAO implements Geometry {
 		for (var i = 0; i < vbos.size(); i++)
 			GL20.glDisableVertexAttribArray(i);
 		GL30.glBindVertexArray(0);
+	}
+	
+	@Override
+	public int size() {
+		return indicies.size();
 	}
 	
 	@Override

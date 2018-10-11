@@ -5,6 +5,8 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 
+import org.lwjgl.opengl.GL11;
+
 import outworldmind.owme.tool.NumberGenerator;
 import outworldmind.owme.unit.Geometry;
 
@@ -30,7 +32,7 @@ public class Renderer {
 	public void draw(Geometry geometry) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		geometry.bind();
-//		GL11.glDrawElements(GL11.GL_TRIANGLES, 16, type, indices);
+		GL11.glDrawElements(GL11.GL_TRIANGLES, geometry.size(), GL11.GL_UNSIGNED_INT, 0);
 	}
 
 }

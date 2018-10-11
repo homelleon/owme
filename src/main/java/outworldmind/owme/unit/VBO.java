@@ -10,6 +10,7 @@ public class VBO implements Geometry {
 	
 	private final int id;
 	private final int type;
+	private int size;
 	
 	private VBO(int id, int type) {
 		this.id = id;
@@ -22,7 +23,7 @@ public class VBO implements Geometry {
 	}
 	
 	public void storeData(int[] data) {
-		var size = data.length;
+		size = data.length;
 		IntBuffer buffer = BufferUtils.createIntBuffer(size);
 		buffer.put(data);
 		buffer.flip();
@@ -30,7 +31,7 @@ public class VBO implements Geometry {
 	}
 	
 	public void storeData(float[] data) {
-		var size = data.length;
+		size = data.length;
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(size);
 		buffer.put(data);
 		buffer.flip();
@@ -53,6 +54,11 @@ public class VBO implements Geometry {
 	@Override
 	public void unbind() {
 		GL15.glBindBuffer(type, 0);
+	}
+	
+	@Override
+	public int size() {
+		return size;
 	}
 	
 	@Override

@@ -5,5 +5,6 @@ public interface Geometry {
 	public void bind();
 	public void unbind();
 	public void delete();
+	public int size();
 	
 }
