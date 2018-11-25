@@ -5,6 +5,9 @@ import outworldmind.owme.core.Engine;
 import outworldmind.owme.core.RenderState;
 import outworldmind.owme.core.Renderer;
 import outworldmind.owme.math.Color;
+import outworldmind.owme.math.Matrix4;
+import outworldmind.owme.shader.EntityShader;
+import outworldmind.owme.shader.ShaderVariable;
 import outworldmind.owme.unit.VAO;
 
 public class App {
@@ -23,6 +26,20 @@ public class App {
     	);
 
     	owme.initialize();
+    	
+    	var viewM4 = new Matrix4();
+    	var projM4 = new Matrix4();
+    	var transfM4 = new Matrix4();
+    	
+    	var shader = new EntityShader();
+    	
+    	shader
+    		.addVariable(new ShaderVariable("View", viewM4))
+    		.addVariable(new ShaderVariable("Projection", projM4))
+    		.addVariable(new ShaderVariable("Transformation", transfM4));
+    	
+    	System.out.println(shader);
+    	
     	renderer.prepare();
     	
     	var geometry = VAO.create();

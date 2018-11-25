@@ -6,18 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public class EventDispatcher {
+public class EventsManager {
 	
 	private Map<String, Map<Object, Event>> events;
-	private static EventDispatcher instance = null; 
 	
-	public static EventDispatcher getInstance() {
-		if (instance == null) {
-			instance = new EventDispatcher();
-		}
-		return instance;
-	}
-	private EventDispatcher() {
+	public EventsManager() {
 		events = new HashMap<String, Map<Object, Event>>();
 	}
 	
