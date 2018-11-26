@@ -30,6 +30,9 @@ public class ShaderStage {
 	private String typeName;
 	
 	public ShaderStage(StringBuilder code, String typeName) {
+		if (code.length() < 1)
+			throw new IllegalStateException(getClass().getSimpleName() + " empty code detected for type " +  typeName);
+		
 		this.typeName = typeName;
 		var type = (int) TYPES.get(typeName);
 		
@@ -50,6 +53,10 @@ public class ShaderStage {
 	
 	public int getType() {
 		return TYPES.get(typeName);
+	}
+	
+	public String getTypeName() {
+		return typeName;
 	}
 
 }

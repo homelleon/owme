@@ -1,5 +1,12 @@
 package outworldmind.owme.shader;
 
+import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
+import static org.lwjgl.opengl.GL20.GL_VALIDATE_STATUS;
+import static org.lwjgl.opengl.GL20.glGetProgramInfoLog;
+import static org.lwjgl.opengl.GL20.glGetProgrami;
+import static org.lwjgl.opengl.GL20.glLinkProgram;
+import static org.lwjgl.opengl.GL20.glValidateProgram;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,17 +29,18 @@ public abstract class Shader {
 	private int id;
 
 	private Map<String, ShaderVariable> variables;
-	private List<Integer> stageIds;
+	private Map<String, ShaderStage> stages;
 	
 	protected Shader() {
 		variables = new HashMap<String, ShaderVariable>();
-		stageIds = new ArrayList<Integer>();
+		stages = new HashMap<String, ShaderStage>();
+		
 		setId(GL20.glCreateProgram());
-		if (id == 0) {
-			var message = getClass().getSimpleName() + " creation failed";
-			Tools.getLogger().log(message);
-			throw new IllegalStateException(message);
-		}
+		if (id != 0) return;
+		
+		var message = getClass().getSimpleName() + " creation failed";
+		Tools.getLogger().log(message);
+		throw new IllegalStateException(message);	
 	}
 	
 	private void setId(int id) {
@@ -40,7 +48,41 @@ public abstract class Shader {
 	}
 	
 	public void initialize() {
+		bindAttributes();
 		
+		if (stages.isEmpty())
+			throw new IllegalArgumentException(getClass().getSimpleName() + " no stage detected");
+		
+		glLinkProgram(id);
+
+		if (glGetProgrami(id, GL_LINK_STATUS) == 0)
+			throw new IllegalStateException(this.getClass().getName() + " linking failed: " + glGetProgramInfoLog(id, 1024));
+		
+		glValidateProgram(id);
+		
+		if (glGetProgrami(id, GL_VALIDATE_STATUS) == 0)
+			throw new IllegalStateException(this.getClass().getName() +  " validation failed: " + glGetProgramInfoLog(id, 1024));
+		
+		loadUniformLocations();
+	}
+	
+	protected abstract void bindAttributes();
+	
+	private void loadUniformLocations() {
+		variables.values().forEach(this::addUniform);
+	}
+	
+	private void addUniform(ShaderVariable variable) {
+		int uniformLocation = this.getUniformLocation(variable.getName());
+			
+		if (uniformLocation == 0xFFFFFFFF)
+			System.err.println(this.getClass().getSimpleName() + " Error: Could not find uniform: " + variable.getName());
+		
+		variable.setId(uniformLocation);
+	}
+	
+	private int getUniformLocation(String uniformName) {
+		return GL20.glGetUniformLocation(id, uniformName);
 	}
 	
 	public Shader start() {
@@ -73,12 +115,18 @@ public abstract class Shader {
 	
 	public void delete() {
 		stop();
-		stageIds.forEach(stageId -> GL20.glDetachShader(id, stageId));
-		stageIds.forEach(GL20::glDeleteShader);
+		
+		stages.values()
+			.forEach(stage -> GL20.glDetachShader(id, stage.getId()));
+		
+		stages.values().stream()
+			.map(stage -> stage.getId())
+			.forEach(GL20::glDeleteShader);
+		
 		GL20.glDeleteProgram(id);
 		
 		variables.clear();
-		stageIds.clear();
+		stages.clear();
 	}
 	
 	protected void addVertexStage(StringBuilder code) {
@@ -108,7 +156,7 @@ public abstract class Shader {
 	private void addStage(StringBuilder code, String typeName) {
 		var stage = new ShaderStage(code, typeName);
 		GL20.glAttachShader(id, stage.getId());
-		stageIds.add(stage.getId());
+		stages.put(stage.getTypeName(), stage);
 	}
 	
 	@Override

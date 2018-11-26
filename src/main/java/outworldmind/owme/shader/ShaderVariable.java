@@ -14,19 +14,18 @@ public class ShaderVariable {
 	public static final String MATRIX_4 = "mat4";
 	public static final String TEXTURE = "sampler2D";
 	
-	public static final Map<String, String> TYPE_MAP = new HashMap<String, String>() {
-		private static final long serialVersionUID = 1L;
-	{
-		put(Integer.class.getSimpleName(), INTEGER);
-		put(Float.class.getSimpleName(), FLOAT);
-//		put(Matrix3.class.getSimpleName(), MATRIX_3);
-		put(Matrix4.class.getSimpleName(), MATRIX_4);
-		put(Texture.class.getSimpleName(), TEXTURE);
-	}};
+	public static final Map<String, String> TYPE_MAP = Map.of(
+		Integer.class.getSimpleName(), INTEGER,
+		Float.class.getSimpleName(), FLOAT,
+//		Matrix3.class.getSimpleName(), MATRIX_3,
+		Matrix4.class.getSimpleName(), MATRIX_4,
+		Texture.class.getSimpleName(), TEXTURE
+	);
 	
 	private String type;
 	private String name;
 	private Object value;
+	private int id;
 	
 	public ShaderVariable(String name, Object value) {
 		this.name = name;
@@ -64,9 +63,17 @@ public class ShaderVariable {
 		return name;
 	}
 	
+	void setId(int id) {
+		this.id = id;
+	}
+	
+	int getId() {
+		return id;
+	}
+	
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName() + " name: " + name + 
-				", type: " + type + ", value:\n" + value;
+				", type: " + type + ", id: " + id + ", value:\n" + value;
 	}
 }
