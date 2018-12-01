@@ -5,31 +5,43 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	public float x, y, z;
 	
 	public Vector3() {
+		super();
 		x = y = z = 0;
 	}
 	
 	public Vector3(Float x, Float y, Float z) {
+		this();
 		set(x, y, z);
 	}
 	
 	public Vector3(Double x, Double y, Double z) {
+		this();
 		set(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Integer x, Integer y, Integer z) {
+		this();
 		set(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Vector3 vector) {
+		this();
 		copy(vector);
 	}	
 	
 	public Vector3(Vector4 plane) {
+		this();
 		copy(plane);
 	}
 	
 	public Vector3(Quaternion q) {
+		this();
 		copy(q);
+	}
+	
+	public Vector3(Float value) {
+		this();
+		set(value);
 	}
 	
 	public static Vector3 front() {

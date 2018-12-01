@@ -341,6 +341,12 @@ public class Matrix4 extends Matrix {
 		return this;
 	}
 	
+	public Matrix4 scale(float scale) {
+		scale(new Vector3(scale));
+		
+		return this;
+	}
+	
 	@Override
 	public Matrix4 transpose() {
 		return (Matrix4) super.transpose();

@@ -13,7 +13,7 @@ public class VAO implements Geometry {
 	private final int id;
 	private List<VBO> vbos;
 	private VBO indicies = null;
-	private int size;
+	private boolean initialized = false;
 	
 	private VAO(int id) {
 		this.id = id;
@@ -33,18 +33,19 @@ public class VAO implements Geometry {
 		return indicies;
 	}
 	
-	public void createIndices(int[] indexData) {
+	public void createIndexBuffer(int[] indexData) {
 		var vbo = VBO.create(GL15.GL_ELEMENT_ARRAY_BUFFER);
 		vbo.bind();
 		vbo.storeData(indexData);
 		indicies = vbo;
 	}
 	
-	public void createBuffer(int attribute, int dimention, float[] bufferData) {
+	public void createFloatBuffer(int attribute, int dimention, float[] bufferData) {
 		var vbo = VBO.create(GL15.GL_ARRAY_BUFFER);
 		vbo.bind();
 		vbo.storeData(bufferData);
 		GL20.glVertexAttribPointer(attribute, dimention, GL11.GL_FLOAT, false, dimention * 4, 0);
+		vbo.unbind();
 		vbos.add(vbo);
 	}
 	
@@ -57,9 +58,11 @@ public class VAO implements Geometry {
 	
 	@Override
 	public void unbind() {
-		for (var i = 0; i < vbos.size(); i++)
-			GL20.glDisableVertexAttribArray(i);
+		if (initialized)
+			for (var i = 0; i < vbos.size(); i++)
+				GL20.glDisableVertexAttribArray(i);
 		GL30.glBindVertexArray(0);
+		initialized = true;
 	}
 	
 	@Override

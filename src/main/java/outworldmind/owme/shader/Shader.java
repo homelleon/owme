@@ -7,13 +7,14 @@ import static org.lwjgl.opengl.GL20.glGetProgrami;
 import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 
 import outworldmind.owme.core.Tools;
 
@@ -31,12 +32,14 @@ public abstract class Shader {
 	private Map<String, ShaderVariable> variables;
 	private Map<String, ShaderStage> stages;
 	
+	private boolean needBinding = true;
+	
 	protected Shader() {
 		variables = new HashMap<String, ShaderVariable>();
 		stages = new HashMap<String, ShaderStage>();
 		
 		setId(GL20.glCreateProgram());
-		if (id != 0) return;
+		if (id > 0) return;
 		
 		var message = getClass().getSimpleName() + " creation failed";
 		Tools.getLogger().log(message);
@@ -47,7 +50,9 @@ public abstract class Shader {
 		this.id = id;
 	}
 	
-	public void initialize() {
+	protected void initialize() {
+		initStages();
+		initVariables();
 		bindAttributes();
 		
 		if (stages.isEmpty())
@@ -56,16 +61,19 @@ public abstract class Shader {
 		glLinkProgram(id);
 
 		if (glGetProgrami(id, GL_LINK_STATUS) == 0)
-			throw new IllegalStateException(this.getClass().getName() + " linking failed: " + glGetProgramInfoLog(id, 1024));
+			throw new IllegalStateException(this.getClass().getSimpleName() + " linking failed: " + glGetProgramInfoLog(id, 1024));
 		
 		glValidateProgram(id);
 		
 		if (glGetProgrami(id, GL_VALIDATE_STATUS) == 0)
-			throw new IllegalStateException(this.getClass().getName() +  " validation failed: " + glGetProgramInfoLog(id, 1024));
+			throw new IllegalStateException(this.getClass().getSimpleName() +  " validation failed: " + glGetProgramInfoLog(id, 1024));
 		
 		loadUniformLocations();
+		bindAttributes();
 	}
 	
+	protected abstract void initStages();	
+	protected abstract void initVariables();	
 	protected abstract void bindAttributes();
 	
 	private void loadUniformLocations() {
@@ -87,28 +95,50 @@ public abstract class Shader {
 	
 	public Shader start() {
 		GL20.glUseProgram(id);
+		if (needBinding)
+			bindVariables();
 		
 		return this;
+	}
+	
+	public void bindVariables() {
+		variables.values().stream()
+			.filter(ShaderVariable::doesNeedBinding)
+			.forEach(ShaderVariable::bind);
 	}
 	
 	public void stop() {
 		GL20.glUseProgram(0);
 	}
 	
+	protected void bindAttribute(int attribute, String variableName) {
+		GL20.glBindAttribLocation(id, attribute, variableName);
+	}
+	
+	protected void bindFragOutput(int attribute, String variableName) {
+		GL30.glBindFragDataLocation(id, attribute, variableName);
+	}
+	
 	public Shader addVariable(ShaderVariable variable) {
 		variables.put(variable.getName(), variable);
+		needBinding = true;
 		
 		return this;
 	}
 	
 	public Shader addVariables(List<ShaderVariable> variableList) {
 		variableList.forEach(variable -> variables.put(variable.getName(), variable));
+		needBinding = true;
 		
 		return this;
 	}
 	
 	public Shader setValue(String variableName, Object value) {
+		if (!variables.containsKey(variableName)) 
+			throw new NoSuchElementException(this.getClass().getSimpleName() + " param wasn't found: " + variableName);
+		
 		variables.get(variableName).setValue(value);
+		needBinding = true;
 		
 		return this;
 	}
@@ -116,12 +146,10 @@ public abstract class Shader {
 	public void delete() {
 		stop();
 		
-		stages.values()
-			.forEach(stage -> GL20.glDetachShader(id, stage.getId()));
-		
-		stages.values().stream()
-			.map(stage -> stage.getId())
-			.forEach(GL20::glDeleteShader);
+		stages.values().forEach(stage -> {
+			GL20.glDetachShader(id, stage.getId());
+			GL20.glDeleteShader(stage.getId());
+		});
 		
 		GL20.glDeleteProgram(id);
 		

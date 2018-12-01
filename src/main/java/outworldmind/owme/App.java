@@ -7,7 +7,7 @@ import outworldmind.owme.core.Renderer;
 import outworldmind.owme.math.Color;
 import outworldmind.owme.math.Matrix4;
 import outworldmind.owme.shader.EntityShader;
-import outworldmind.owme.shader.ShaderVariable;
+import outworldmind.owme.unit.Geometry;
 import outworldmind.owme.unit.VAO;
 
 public class App {
@@ -22,32 +22,30 @@ public class App {
     	
     	var renderer = new Renderer(
     		new RenderState()
-    			.setClearColor(new Color(1f, 0f, 0f))
+    			.setClearColor(new Color(0f, 0f, 0f))
     	);
 
     	owme.initialize();
     	
     	var viewM4 = new Matrix4();
+    	viewM4.scale(0.5f);
     	var projM4 = new Matrix4();
     	var transfM4 = new Matrix4();
     	
     	var shader = new EntityShader();
     	
     	shader
-    		.addVariable(new ShaderVariable("View", viewM4))
-    		.addVariable(new ShaderVariable("Projection", projM4))
-    		.addVariable(new ShaderVariable("Transformation", transfM4));
+			.setValue(EntityShader.TRANSFORMATION_MATRIX, transfM4)
+    		.setValue(EntityShader.PROJECTION_MATRIX, projM4)
+			.setValue(EntityShader.VIEW_MATRIX, viewM4);
     	
-    	System.out.println(shader);
+    	Geometry geometry = VAO.create();
     	
-    	renderer.prepare();
-    	
-    	var geometry = VAO.create();
+    	geometry.bind();
     	
     	var size = 1.0f;
     	
-    	geometry.bind();
-    	geometry.createBuffer(0, 3, new float[] {
+    	((VAO) geometry).createFloatBuffer(0, 3, new float[] {
 			// front
 			-size, size, size, 
 			size, size, size, 
@@ -80,7 +78,7 @@ public class App {
 			size, -size, size    		
     	});
     	
-    	geometry.createIndices(new int[] {
+    	((VAO) geometry).createIndexBuffer(new int[] {
     		// front
     		0, 1, 2, 2, 1, 3,    		
     		// back
@@ -94,6 +92,11 @@ public class App {
     		// right
     		20, 21, 22, 22, 21, 23
     	});
+    	
+    	geometry.unbind();
+    	
+    	renderer.prepare();
+    	renderer.setShader(shader);
     	
     	while (true) {
     		renderer.draw(geometry);
