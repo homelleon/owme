@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 import outworldmind.owme.shader.Shader;
@@ -17,19 +18,43 @@ public class Renderer {
 	private RenderState state;
 	private Shader shader;
 	private boolean needRebuild = true;
+	private boolean needReset = true;
 	
 	public Renderer(RenderState state) {
 		id = NumberGenerator.generateId();
-		this.state = state;
+		setState(state);
 	}
 	
-	public void prepare() {
+	private void reset() {
 		var color = state.getClearColor();
 		glClearColor(color.r, color.b, color.g, color.a);
+		var depthTestMode = state.getDepthTestMode();
+		var cullFaceMode = state.getCullFaceMode();
+		
+		if (depthTestMode == RenderState.NONE)
+			GL11.glDisable(GL11.GL_DEPTH_TEST);
+		else {
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GL11.glDepthFunc(depthTestMode);
+		}
+		
+		if (cullFaceMode == RenderState.NONE)
+			GL11.glDisable(GL11.GL_CULL_FACE);
+		else {
+			GL11.glEnable(GL11.GL_CULL_FACE);
+			GL11.glCullFace(cullFaceMode);
+		}
+		
+		needReset = false;
 	}
 	
 	public int getId() {
 		return id;
+	}
+	
+	public void setState(RenderState state) {
+		this.state = state;
+		needReset = true;
 	}
 	
 	public void setShader(Shader shader) {
@@ -52,6 +77,8 @@ public class Renderer {
 	}
 	
 	public void draw(Geometry geometry) {
+		if (needReset) reset();
+			
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		if (needRebuild) rebuild();
 		geometry.bind();

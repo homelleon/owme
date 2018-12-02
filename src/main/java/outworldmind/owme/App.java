@@ -22,7 +22,7 @@ public class App {
     	
     	var renderer = new Renderer(
     		new RenderState()
-    			.setClearColor(new Color(0f, 0f, 0f))
+    			.setClearColor(new Color(0f, 0f, 0))
     	);
 
     	owme.initialize();
@@ -95,7 +95,6 @@ public class App {
     	
     	geometry.unbind();
     	
-    	renderer.prepare();
     	renderer.setShader(shader);
     	
     	while (true) {

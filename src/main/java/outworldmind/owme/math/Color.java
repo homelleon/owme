@@ -4,10 +4,12 @@ public class Color {
 	
 	public static final float RGB_SIZE = 255;
 	
-	public float r;
-	public float g;
-	public float b;
+	public float r = 0.0f;
+	public float g = 0.0f;
+	public float b = 0.0f;
 	public float a = 1.0f;
+	
+	public Color() {}
 	
 	public Color(String hexColor) {
 		int r = Integer.valueOf( hexColor.substring( 1, 3 ), 16 );
