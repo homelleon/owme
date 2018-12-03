@@ -5,7 +5,6 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 
-import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 import outworldmind.owme.shader.Shader;

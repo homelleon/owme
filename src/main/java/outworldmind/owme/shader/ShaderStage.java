@@ -14,6 +14,7 @@ import java.util.Map;
 import org.lwjgl.opengl.GL20;
 
 import outworldmind.owme.core.Tools;
+import outworldmind.owme.tool.FileLoader;
 
 public class ShaderStage {
 	
@@ -29,6 +30,9 @@ public class ShaderStage {
 	private int id;
 	private String typeName;
 	
+	private static String BASE_SHADER = "/shader/base.glsl";
+	private static final StringBuilder baseCode = FileLoader.INSTANCE.load(BASE_SHADER);
+	
 	public ShaderStage(StringBuilder code, String typeName) {
 		if (code.length() < 1)
 			throw new IllegalStateException(getClass().getSimpleName() + " empty code detected for type " +  typeName);
@@ -37,6 +41,8 @@ public class ShaderStage {
 		var type = (int) TYPES.get(typeName);
 		
 		id = GL20.glCreateShader(type);
+		
+		code.insert(0, baseCode);
 		GL20.glShaderSource(id, code);
 		GL20.glCompileShader(id);
 		
