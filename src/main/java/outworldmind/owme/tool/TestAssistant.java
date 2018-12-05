@@ -33,30 +33,12 @@ public class TestAssistant {
 						var source = pipe.getInputSrc();
 						var expected = pipe.getOutput();
 						
-						var actual = source == null ?
-								objectClass.getMethod(name).invoke(dest) :
-								(source instanceof Object[] ?
-										objectClass.getMethod(name, Stream.of(source)
-													.map(Object::getClass).toArray(Class<?>[]::new)
-										)
-										.invoke(dest.clone(), source)
-										: objectClass.getMethod(name, source.getClass())
-										.invoke(dest.clone(), source));
+						var actual = estimateActual(name, objectClass, pipe);
 						
 						var messageVerb = name.toUpperCase().substring(0, 1) + name.substring(1, name.length()); 
-						Boolean check = false;
-						
-						if (actual instanceof Vector3 && expected instanceof Vector3)
-							check = (Boolean) objectClass.getMethod("equals", objectClass).invoke(actual, expected);
-						else if (actual instanceof Float && expected instanceof Float)
-							check = Maths.equal((float) actual, (float) expected);
-						else if (actual instanceof Exception)
-							check = actual.getClass() == expected.getClass();
-						else
-							check = actual.equals(expected);
 						
 						assertTrue(
-							check,
+							compareResult(objectClass, actual, expected),
 							messageVerb + " for " + dest + 
 							(source == null ? "" : 
 								(source instanceof Object[] ? 
@@ -73,9 +55,41 @@ public class TestAssistant {
 				})
 			);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private static Object estimateActual(String methodName, Class<?> objectClass, DstSrcOutPipe pipe)
+	throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, 
+	NoSuchMethodException, SecurityException {
+		var dest = (Vector<?>) pipe.getInputDst();
+		var source = pipe.getInputSrc();
+		
+		if (source == null) {
+			return objectClass.getMethod(methodName).invoke(dest);
+		} else if (source instanceof Object[]) {
+			return objectClass.getMethod(
+					methodName, 
+					Stream.of(source).map(Object::getClass).toArray(Class<?>[]::new)
+				)
+				.invoke(dest.clone(), source);
+		} else {
+			return objectClass.getMethod(methodName, source.getClass())
+				.invoke(dest.clone(), source);
+		}
+	}
+	
+	private static boolean compareResult(Class<?> objectClass, Object actual, Object expected) 
+	throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, 
+	NoSuchMethodException, SecurityException {
+		if (actual instanceof Vector3 && expected instanceof Vector3)
+			return (Boolean) objectClass.getMethod("equals", objectClass).invoke(actual, expected);
+		else if (actual instanceof Float && expected instanceof Float)
+			return Maths.equal((float) actual, (float) expected);
+		else if (actual instanceof Exception)
+			return actual.getClass() == expected.getClass();
+		else
+			return actual.equals(expected);
 	}
 	
 	public static void testVector2Method(String name, Stream<TestUnit> testStream) {

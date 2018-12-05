@@ -23,6 +23,7 @@ public class Vector3Test {
 	public void testCreation() {
 		var tester = new Vector3CreationTester(CLASS_NAME);
 		tester.testNoArgsCreation();
+		tester.test1ArgCreation();
 		tester.test3ArgsCreation();
 		tester.testVec3ArgCreation();
 		tester.testPlaneArgCreation();
@@ -95,6 +96,15 @@ class Vector3CreationTester {
 			new TestUnit(0.0f, vector.y, "y: "),
 			new TestUnit(0.0f, vector.z, "z: ")
 		);
+	}
+	
+	public void test1ArgCreation() {		
+		var tests = Stream.of(
+			new DstSrcOutPipe(null, 0.0f, new Vector3(0,0,0)),
+			new DstSrcOutPipe(null, 1.0f, new Vector3(1,1,1))
+		);
+		
+//		TestAssistant.testVector3MethodByName(className, "Vector3", tests);
 	}
 	
 	public void test3ArgsCreation() {
