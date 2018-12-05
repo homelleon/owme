@@ -9,9 +9,13 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import outworldmind.owme.tool.DstSrcOutPipe;
-import outworldmind.owme.tool.TestAssistant;
-import outworldmind.owme.tool.TestUnit;
+import outworldmind.owme.maths.Quaternion;
+import outworldmind.owme.maths.Rotation;
+import outworldmind.owme.maths.Vector3;
+import outworldmind.owme.maths.Vector4;
+import outworldmind.owme.tools.DstSrcOutPipe;
+import outworldmind.owme.tools.TestAssistant;
+import outworldmind.owme.tools.TestUnit;
 
 @DisplayName("Vector3")
 public class Vector3Test {
