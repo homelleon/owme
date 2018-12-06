@@ -1,4 +1,4 @@
-package outworldmind.owme.shaders;
+package outworldmind.owme.graphics;
 
 import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
 import static org.lwjgl.opengl.GL20.GL_VALIDATE_STATUS;
@@ -37,32 +37,33 @@ public abstract class Shader {
 	protected Shader() {
 		variables = new HashMap<String, ShaderVariable>();
 		stages = new HashMap<String, ShaderStage>();
-		
-		setId(GL20.glCreateProgram());
-		if (id > 0) return;
-		
-		var message = getClass().getSimpleName() + " creation failed";
-		Tools.getLogger().log(message);
-		throw new IllegalStateException(message);	
 	}
 	
 	private void setId(int id) {
 		this.id = id;
 	}
 	
-	protected void initialize() {
+	public void init() {
+		setId(GL20.glCreateProgram());
+		if (id <= 0) {		
+			var message = getClass().getSimpleName() + " creation failed";
+			Tools.getLogger().log(message);
+			throw new IllegalStateException(message);
+		}
+		
 		initStages();
-		initVariables();
-		bindAttributes();
 		
 		if (stages.isEmpty())
 			throw new IllegalArgumentException(getClass().getSimpleName() + " no stage detected");
 		
+		attachStages();
+		bindAttributes();
 		glLinkProgram(id);
 
 		if (glGetProgrami(id, GL_LINK_STATUS) == 0)
 			throw new IllegalStateException(this.getClass().getSimpleName() + " linking failed: " + glGetProgramInfoLog(id, 1024));
-		
+
+		attachStages();
 		glValidateProgram(id);
 		
 		if (glGetProgrami(id, GL_VALIDATE_STATUS) == 0)
@@ -72,8 +73,18 @@ public abstract class Shader {
 		bindAttributes();
 	}
 	
-	protected abstract void initStages();	
-	protected abstract void initVariables();	
+	private void initStages() {
+		stages.values().stream()
+			.filter(stage -> stage.getId() < 0)
+			.forEach(ShaderStage::init);
+	}
+	
+	private void attachStages() {
+		stages.values().stream()
+			.map(ShaderStage::getId)
+			.forEach(this::attachStage);
+	}
+		
 	protected abstract void bindAttributes();
 	
 	private void loadUniformLocations() {
@@ -183,8 +194,11 @@ public abstract class Shader {
 	
 	private void addStage(StringBuilder code, String typeName) {
 		var stage = new ShaderStage(code, typeName);
-		GL20.glAttachShader(id, stage.getId());
 		stages.put(stage.getTypeName(), stage);
+	}
+	
+	private void attachStage(int stageId) {
+		GL20.glAttachShader(id, stageId);
 	}
 	
 	@Override

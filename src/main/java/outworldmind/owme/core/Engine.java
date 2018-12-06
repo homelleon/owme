@@ -20,7 +20,7 @@ public class Engine {
 		return window;
 	}
 	
-	public void initialize() {
+	public void start() {
 		initValidator();
 		validateConfig();
 		initWindow();

@@ -1,5 +1,7 @@
 package outworldmind.owme.shaders;
 
+import outworldmind.owme.graphics.Shader;
+
 public class TerrainShader extends Shader {
 
 	@Override
@@ -8,14 +10,12 @@ public class TerrainShader extends Shader {
 		
 	}
 
-	@Override
-	protected void initStages() {
+	private void initStages() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	protected void initVariables() {
+	private void initVariables() {
 		// TODO Auto-generated method stub
 		
 	}

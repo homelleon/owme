@@ -34,18 +34,12 @@ public class VAO implements Geometry {
 	}
 	
 	public void createIndexBuffer(int[] indexData) {
-		var vbo = VBO.create(GL15.GL_ELEMENT_ARRAY_BUFFER);
-		vbo.bind();
-		vbo.storeData(indexData);
-		indicies = vbo;
+		indicies = VBO.create(GL15.GL_ELEMENT_ARRAY_BUFFER, indexData);
 	}
 	
 	public void createFloatBuffer(int attribute, int dimention, float[] bufferData) {
-		var vbo = VBO.create(GL15.GL_ARRAY_BUFFER);
-		vbo.bind();
-		vbo.storeData(bufferData);
+		var vbo = VBO.create(GL15.GL_ARRAY_BUFFER, bufferData);
 		GL20.glVertexAttribPointer(attribute, dimention, GL11.GL_FLOAT, false, dimention * 4, 0);
-		vbo.unbind();
 		vbos.add(vbo);
 	}
 	

@@ -1,6 +1,5 @@
 package outworldmind.owme.graphics;
 
-import outworldmind.owme.shaders.Shader;
 import outworldmind.owme.tools.NumberGenerator;
 
 public class Model {

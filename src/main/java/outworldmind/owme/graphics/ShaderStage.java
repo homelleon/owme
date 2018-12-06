@@ -1,4 +1,4 @@
-package outworldmind.owme.shaders;
+package outworldmind.owme.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
@@ -27,8 +27,9 @@ public class ShaderStage {
 		Shader.TESS_CONTROL_STAGE, GL_TESS_CONTROL_SHADER
 	);
 	
-	private int id;
+	private int id = -1;
 	private String typeName;
+	private StringBuilder code;
 	
 	private static String BASE_SHADER = "/shader/base.glsl";
 	private static final StringBuilder baseCode = FileLoader.INSTANCE.load(BASE_SHADER);
@@ -36,10 +37,12 @@ public class ShaderStage {
 	public ShaderStage(StringBuilder code, String typeName) {
 		if (code.length() < 1)
 			throw new IllegalStateException(getClass().getSimpleName() + " empty code detected for type " +  typeName);
-		
+		this.code = code;
 		this.typeName = typeName;
+	}
+	
+	public void init() {
 		var type = (int) TYPES.get(typeName);
-		
 		id = GL20.glCreateShader(type);
 		
 		code.insert(0, baseCode);

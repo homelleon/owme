@@ -1,4 +1,4 @@
-package outworldmind.owme.shaders;
+package outworldmind.owme.graphics;
 
 import java.nio.FloatBuffer;
 import java.util.Map;
@@ -6,7 +6,6 @@ import java.util.Map;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
-import outworldmind.owme.graphics.Texture;
 import outworldmind.owme.maths.Matrix4;
 import outworldmind.owme.maths.Vector2;
 import outworldmind.owme.maths.Vector3;

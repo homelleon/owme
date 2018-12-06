@@ -2,6 +2,8 @@ package outworldmind.owme.shaders;
 
 import java.util.List;
 
+import outworldmind.owme.graphics.Shader;
+import outworldmind.owme.graphics.ShaderVariable;
 import outworldmind.owme.maths.Matrix4;
 import outworldmind.owme.tools.FileLoader;
 
@@ -18,18 +20,16 @@ public class EntityShader extends Shader {
 	
 	public EntityShader() {
 		super();
-
-		initialize();
+		addStages();
+		addVariables();
 	}
 	
-	@Override
-	protected void initStages() {
+	private void addStages() {
 		addVertexStage(FileLoader.INSTANCE.load(VERTEX_SHADER));
 		addFragmentStage(FileLoader.INSTANCE.load(FRAGMENT_SHADER));
 	}
 	
-	@Override
-	protected void initVariables() {
+	private void addVariables() {
 		addVariables(List.of(
 			new ShaderVariable(TRANSFORMATION_MATRIX, new Matrix4()),
 			new ShaderVariable(PROJECTION_MATRIX, new Matrix4()),

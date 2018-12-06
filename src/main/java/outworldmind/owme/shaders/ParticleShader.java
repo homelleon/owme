@@ -1,5 +1,7 @@
 package outworldmind.owme.shaders;
 
+import outworldmind.owme.graphics.Shader;
+
 public class ParticleShader extends Shader {
 
 	@Override
@@ -8,14 +10,12 @@ public class ParticleShader extends Shader {
 		
 	}
 
-	@Override
-	protected void initStages() {
+	private void addStages() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	protected void initVariables() {
+	private void addVariables() {
 		// TODO Auto-generated method stub
 		
 	}

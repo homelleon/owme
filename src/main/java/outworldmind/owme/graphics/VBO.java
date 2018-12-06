@@ -17,12 +17,26 @@ public class VBO implements Geometry {
 		this.type = type;
 	}
 	
-	public static VBO create(int type) {
+	public static VBO create(int type, int[] data) {
+		var vbo = create(type);
+		vbo.bind();
+		vbo.storeData(data);
+		return vbo;
+	}
+	
+	public static VBO create(int type, float[] data) {
+		var vbo = create(type);
+		vbo.bind();
+		vbo.storeData(data);
+		return vbo;
+	}
+	
+	private static VBO create(int type) {
 		int id = GL15.glGenBuffers();
 		return new VBO(id, type);
 	}
 	
-	public void storeData(int[] data) {
+	private void storeData(int[] data) {
 		size = data.length;
 		IntBuffer buffer = BufferUtils.createIntBuffer(size);
 		buffer.put(data);
@@ -30,7 +44,7 @@ public class VBO implements Geometry {
 		storeData(buffer);
 	}
 	
-	public void storeData(float[] data) {
+	private void storeData(float[] data) {
 		size = data.length;
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(size);
 		buffer.put(data);
@@ -38,11 +52,11 @@ public class VBO implements Geometry {
 		storeData(buffer);
 	}
 	
-	public void storeData(FloatBuffer data) {
+	private void storeData(FloatBuffer data) {
 		GL15.glBufferData(type, data, GL15.GL_STATIC_DRAW);
 	}
 	
-	public void storeData(IntBuffer data) {
+	private void storeData(IntBuffer data) {
 		GL15.glBufferData(type, data, GL15.GL_STATIC_DRAW);
 	}
 	

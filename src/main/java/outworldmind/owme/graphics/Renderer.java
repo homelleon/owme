@@ -8,7 +8,6 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import org.lwjgl.opengl.GL11;
 
 import outworldmind.owme.core.Console;
-import outworldmind.owme.shaders.Shader;
 import outworldmind.owme.tools.NumberGenerator;
 
 public class Renderer {
