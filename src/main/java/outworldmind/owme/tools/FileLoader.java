@@ -13,20 +13,20 @@ public class FileLoader implements DataLoader<StringBuilder> {
 
 	@Override
 	public StringBuilder load(String path) {
-		StringBuilder shaderSource = new StringBuilder();
+		StringBuilder text = new StringBuilder();
 		try {
 			InputStream in = FileLoader.class.getResourceAsStream(path);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 			String line;
 			while ((line = reader.readLine()) != null)
-				shaderSource.append(line).append("\n");
+				text.append(line).append("\n");
 			reader.close();
 		} catch (IOException|NullPointerException e) {
 			System.err.println("Couldn't read file from " + path);
 			e.printStackTrace();
 			System.exit(-1);
 		}
-		return shaderSource;
+		return text;
 	}
 
 }

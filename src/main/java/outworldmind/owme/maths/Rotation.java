@@ -1,5 +1,11 @@
 package outworldmind.owme.maths;
 
+/**
+ * Stores rotate data in angles.
+ * 
+ * @author Sergey
+ *
+ */
 public class Rotation extends Vector3 {
 	
 	public Rotation() {
@@ -40,6 +46,15 @@ public class Rotation extends Vector3 {
 	
 	public void setPitch(float pitch) {
 		z = pitch;
+	}
+	
+	public Rotation getRadians() {
+		return new Rotation(Maths.degToRad(x), Maths.degToRad(y), Maths.degToRad(z));
+	}
+	
+	@Override
+	public Rotation clone() {
+		return new Rotation(this);
 	}
 
 }

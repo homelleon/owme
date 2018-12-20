@@ -1,74 +1,116 @@
 package outworldmind.owme.maths;
 
-public abstract class Transform {
+public class Transform {
 
-	protected Vector3 position;
-	protected Vector3 scale;
-	protected Rotation rotation;
-	protected Matrix4 transformation;
+	private Vector3 position;
+	private Vector3 scale;
+	private Rotation rotation;
+	private Matrix4 matrix = new Matrix4();
 	
-	public Transform(Vector3 position, Vector3 scale, Rotation rotation) {
-		this.position = position;
-		this.scale = scale;
-		this.rotation = rotation;
-	}
+	private boolean needUpdate = true;
 	
 	public Transform() {
-		this.position = new Vector3();
-		this.scale = new Vector3();
-		this.rotation = new Rotation();
+		this(new Vector3(), new Vector3(1), new Rotation());
 	}
 	
+	public Transform(Vector3 position, Vector3 scale, Rotation rotation) {
+		this.position = position.clone();
+		this.scale = scale.clone();
+		this.rotation = rotation.clone();
+	}
+	
+	/**
+	 * Gets position
+	 * 
+	 * @return {@link Vector3} copy of position vector
+	 */
 	public Vector3 getPosition() {
-		return position;
+		return position.clone();
 	}
 	
 	public Transform setPosition(Vector3 position) {
-		this.position = position;
+		this.position.copy(position);
+		needUpdate = true;
 		
 		return this;
 	}
 	
 	public Transform offsetPosition(Vector3 position) {
 		this.position.add(position);
+		needUpdate = true;
 		
 		return this;
 	}
 	
+	/**
+	 * Gets scale.
+	 * 
+	 * @return {@link Vector3} copy of scale vector
+	 */
 	public Vector3 getScale() {
-		return scale;
+		return scale.clone();
 	}
 	
 	public Transform setScale(Vector3 scale) {
-		this.scale = scale;
+		this.scale.copy(scale);
+		needUpdate = true;
 		
 		return this;
 	}
 	
+	public Transform offsetScale(Vector3 scale) {
+		this.scale.add(scale);
+		needUpdate = true;
+		
+		return this;
+	} 
+	
+	/**
+	 * Gets rotation.
+	 * 
+	 * @return {@link Rotation} copy of Rotation object
+	 */
 	public Rotation getRotation() {
-		return rotation;
+		return rotation.clone();
 	}
 	
-	public Transform setRotation(Rotation rotation) {
-		this.rotation = rotation;
+	public Transform setRotation(Vector3 rotation) {
+		this.rotation.copy(rotation);
+		needUpdate = true;
 		
 		return this;
 	}
 	
 	public Transform offsetRotation(Rotation rotation) {
 		this.rotation.add(rotation);
+		needUpdate = true;
 		
 		return this;
 	}
 	
+	/**
+	 * Gets current transformation matrix
+	 * 
+	 * @return {@link Matrix4} copy of 4x4 matrix
+	 */
 	public Matrix4 getMatrix() {
-		return transformation;
+		return matrix.clone();
 	}
 	
+	/**
+	 * Updates transformation matrix.
+	 * 
+	 * @return {@link Transform} current Transform object
+	 */
 	public Transform update() {
-		//TODO: impl update
-		transformation.scale(scale);
-		transformation.translate(position);
+		if (!needUpdate) return this;
+		matrix.setIdentity();
+		
+		matrix.scale(scale);
+		matrix.translate(position);
+		matrix.rotate(rotation.getRadians());
+		
+		needUpdate = false;
 		
 		return this;
 	}

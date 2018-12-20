@@ -1,4 +1,4 @@
-package outworldmind.owme.graphics.primitives;
+package outworldmind.owme.tools.modelUtils;
 
 import outworldmind.owme.graphics.Geometry;
 import outworldmind.owme.graphics.VAO;
@@ -36,7 +36,7 @@ public class BoxGeometryBuilder {
     	var y = height / 2;
     	var z = depth / 2;
     	
-    	((VAO) geometry).createFloatBuffer(0, 3, new float[] {
+    	((VAO) geometry).createFloatBuffer(3, new float[] {
     			// front
     			-x, y, z, 
     			-x, -y, z, 
@@ -74,6 +74,72 @@ public class BoxGeometryBuilder {
     			x, y, -z
         	});
     	
+    	((VAO) geometry).createFloatBuffer(3, new float[] {
+    			// front
+    			0, 0, 1,
+    			0, 0, 1,
+    			0, 0, 1,
+    			0, 0, 1,
+    			// back
+    			0, 0, -1,
+    			0, 0, -1,
+    			0, 0, -1,
+    			0, 0, -1,
+    			// top
+    			0, 1, 0,
+    			0, 1, 0,
+    			0, 1, 0,
+    			0, 1, 0,    			
+    			// bottom
+    			0, -1, 0,
+    			0, -1, 0,
+    			0, -1, 0,
+    			0, -1, 0,
+    			// left
+    			-1, 0, 0,
+    			-1, 0, 0,
+    			-1, 0, 0,
+    			-1, 0, 0,
+    			// right
+    			1, 0, 0,
+    			1, 0, 0,
+    			1, 0, 0,
+    			1, 0, 0,
+        	});
+
+    	((VAO) geometry).createFloatBuffer(2, new float[] {
+    			// front
+    			0, 1,
+    			0, 0,
+    			1, 0,
+    			1, 1,
+    			// back
+    			0, 1,
+    			0, 0,
+    			1, 0,
+    			1, 1,
+    			// top
+    			0, 1,
+    			0, 0,
+    			1, 0,
+    			1, 1,    			
+    			// bottom
+    			0, 1,
+    			0, 0,
+    			1, 0,
+    			1, 1,
+    			// left
+    			0, 1,
+    			0, 0,
+    			1, 0,
+    			1, 1,
+    			// right
+    			0, 1,
+    			0, 0,
+    			1, 0,
+    			1, 1,
+        	});
+    	
     	((VAO) geometry).createIndexBuffer(new int[] {
     		// front
     		0, 1, 3, 3, 1, 2,
@@ -82,7 +148,7 @@ public class BoxGeometryBuilder {
     		// top
     		8, 9 , 11, 11, 9, 10,
     		// bottom
-    		12, 13, 15, 15, 13, 14,
+    		14, 13, 15, 15, 13, 12,
     		// left
     		18, 17, 19, 19, 17, 16,
     		// right

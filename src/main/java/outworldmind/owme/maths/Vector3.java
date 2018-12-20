@@ -11,7 +11,7 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	
 	public Vector3(Float x, Float y, Float z) {
 		this();
-		set(x, y, z);
+		set(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Double x, Double y, Double z) {
@@ -44,6 +44,11 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		set(value);
 	}
 	
+	public Vector3(Integer value) {
+		this();
+		set(value);
+	}
+	
 	public static Vector3 front() {
 		return new Vector3(0, 0, 1);
 	}
@@ -69,17 +74,24 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3 set(Float x, Float y, Float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.x = x.floatValue();
+		this.y = y.floatValue();
+		this.z = z.floatValue();
+		
+		return this;
+	}
+	
+	public Vector3 set(Integer value) {
+		set(value.floatValue());
 		
 		return this;
 	}
 	
 	public Vector3 set(Float value) {
-		this.x = value;
-		this.y = value;
-		this.z = value;
+		var floatValue = value.floatValue();
+		this.x = floatValue;
+		this.y = floatValue;
+		this.z = floatValue;
 		
 		return this;
 	}
@@ -140,9 +152,10 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3 scale(Float scale) {
-		x *= scale;
-		y *= scale;
-		z *= scale;
+		var floatValue = scale.floatValue();
+		x *= floatValue;
+		y *= floatValue;
+		z *= floatValue;
 
 		return this;
 	}
@@ -201,9 +214,11 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3 add(Float value) {
-		x += value;
-		y += value;
-		z += value;
+		var floatValue = value.floatValue();
+		
+		x += floatValue;
+		y += floatValue;
+		z += floatValue;
 		
 		return this;
 	}
@@ -226,9 +241,10 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3 sub(Float value) {
-		x -= value;
-		y -= value;
-		z -= value;
+		var floatValue = value.floatValue();
+		x -= floatValue;
+		y -= floatValue;
+		z -= floatValue;
 		
 		return this;
 	}
@@ -250,9 +266,10 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3 mul(Float value) {
-		x *= value;
-		y *= value;
-		z *= value;
+		var floatValue = value.floatValue();
+		x *= floatValue;
+		y *= floatValue;
+		z *= floatValue;
 		
 		return this;
 	}
@@ -277,12 +294,13 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	}
 	
 	public Vector3 div(Float value) {
-		if (value == 0.0f)
+		var floatValue = value.floatValue();
+		if (floatValue == 0.0f)
 			throw new NullPointerException("Vector3.div - divide by zero.");
 		
-		x /= value;
-		y /= value;
-		z /= value;
+		x /= floatValue;
+		y /= floatValue;
+		z /= floatValue;
 		
 		return this;
 	}
@@ -322,6 +340,10 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		}
 		
 		return 1;
+	}
+	
+	public float[] toArray() {
+		return new float[] {x, y, z};
 	}
 	
 	@Override

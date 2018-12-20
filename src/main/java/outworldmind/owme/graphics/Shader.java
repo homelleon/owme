@@ -32,7 +32,7 @@ public abstract class Shader {
 	private Map<String, ShaderVariable> variables;
 	private Map<String, ShaderStage> stages;
 	
-	private boolean needBinding = true;
+	private boolean needUpdate = true;
 	
 	protected Shader() {
 		variables = new HashMap<String, ShaderVariable>();
@@ -43,7 +43,7 @@ public abstract class Shader {
 		this.id = id;
 	}
 	
-	public void init() {
+	public Shader init() {
 		setId(GL20.glCreateProgram());
 		if (id <= 0) {		
 			var message = getClass().getSimpleName() + " creation failed";
@@ -71,6 +71,8 @@ public abstract class Shader {
 		
 		loadUniformLocations();
 		bindAttributes();
+		
+		return this;
 	}
 	
 	private void initStages() {
@@ -88,7 +90,8 @@ public abstract class Shader {
 	protected abstract void bindAttributes();
 	
 	private void loadUniformLocations() {
-		variables.values().forEach(this::addUniform);
+		variables.values().stream().filter(variable -> variable.isTypeOf(Texture.class)).forEach(this::addUniform);
+		variables.values().stream().filter(variable -> !variable.isTypeOf(Texture.class)).forEach(this::addUniform);
 	}
 	
 	private void addUniform(ShaderVariable variable) {
@@ -104,18 +107,19 @@ public abstract class Shader {
 		return GL20.glGetUniformLocation(id, uniformName);
 	}
 	
-	public Shader start() {
+	public void start() {
 		GL20.glUseProgram(id);
-		if (needBinding)
-			bindVariables();
-		
-		return this;
+		update();
 	}
 	
-	public void bindVariables() {
+	public void update() {
+		if (!needUpdate) return;
+		
 		variables.values().stream()
 			.filter(ShaderVariable::doesNeedBinding)
 			.forEach(ShaderVariable::bind);
+		
+		needUpdate = false;
 	}
 	
 	public void stop() {
@@ -132,14 +136,14 @@ public abstract class Shader {
 	
 	public Shader addVariable(ShaderVariable variable) {
 		variables.put(variable.getName(), variable);
-		needBinding = true;
+		needUpdate = true;
 		
 		return this;
 	}
 	
 	public Shader addVariables(List<ShaderVariable> variableList) {
 		variableList.forEach(variable -> variables.put(variable.getName(), variable));
-		needBinding = true;
+		needUpdate = true;
 		
 		return this;
 	}
@@ -149,7 +153,7 @@ public abstract class Shader {
 			throw new NoSuchElementException(this.getClass().getSimpleName() + " param wasn't found: " + variableName);
 		
 		variables.get(variableName).setValue(value);
-		needBinding = true;
+		needUpdate = true;
 		
 		return this;
 	}

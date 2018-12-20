@@ -24,6 +24,8 @@ public class ShaderVariable {
 	private static final String MATRIX_4 = "mat4";
 	private static final String TEXTURE = "sampler2D";
 	
+	private static int textureBindCount = 0;
+	
 	public static final Map<String, String> TYPE_MAP = Map.of(
 		Integer.class.getSimpleName(), INTEGER,
 		Float.class.getSimpleName(), FLOAT,
@@ -87,6 +89,7 @@ public class ShaderVariable {
 //			case MATRIX_2: loadMatrix2((Matrix2) value); break;
 //			case MATRIX_3: loadMatrix3((Matrix3) value); break;
 			case MATRIX_4: loadMatrix4((Matrix4) value); break;
+			case TEXTURE: loadInt((int) textureBindCount++); break;
 		}
 		
 		needBinding = false;
@@ -141,6 +144,10 @@ public class ShaderVariable {
 	
 	public boolean doesNeedBinding() {
 		return needBinding;
+	}
+	
+	public boolean isTypeOf(Class<?> clazz) {
+		return TYPE_MAP.get(clazz.getSimpleName()) == type;
 	}
 	
 	public String getType() {

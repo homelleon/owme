@@ -5,22 +5,29 @@ import outworldmind.owme.tools.NumberGenerator;
 public class Model {
 	
 	private int id;
+	private String name;
 	private Geometry geometry;
 	private Shader shader;
 	private Renderer renderer;
 	private Material material;
 	
-	public Model() {
-		setId(NumberGenerator.generateId());
+	public Model(String name) {
+		id = NumberGenerator.generateId();
+		this.name = name;
 	}
 	
-	private void setId(int id) {
-		this.id = id;
+	public Model() {
+		this("noname");
 	}
 	
 	public int getId() {
 		return id;
 	}
+	
+	public String getName() {
+		return name;
+	}
+	
 	public Model setGeometry(Geometry geometry) {
 		this.geometry = geometry;
 		

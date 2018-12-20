@@ -161,7 +161,7 @@ public class Matrix4 extends Matrix {
 		ry.m[0][0] =  (float) Math.cos(y);  ry.m[0][2] =  (float) Math.sin(y);			     
 		ry.m[2][0] = -(float) Math.sin(y);  ry.m[2][2] =  (float) Math.cos(y);  
 	
-		copy(rz.mul(ry.mul(rx)));
+		this.mul(rz.mul(ry.mul(rx)));
 		
 		return this;
 	}
@@ -325,18 +325,9 @@ public class Matrix4 extends Matrix {
 	}
 	
 	public Matrix4 scale(Vector3 scale) {
-		m[0][0] *= scale.x;
-		m[0][1] *= scale.x;
-		m[0][2] *= scale.x;
-		m[0][3] *= scale.x;
-		m[1][0] *= scale.y;
-		m[1][1] *= scale.y;
-		m[1][2] *= scale.y;
-		m[1][3] *= scale.y;
-		m[2][0] *= scale.z;
-		m[2][1] *= scale.z;
-		m[2][2] *= scale.z;
-		m[2][3] *= scale.z;
+		m[0][0] = scale.x;
+		m[1][1] = scale.y;
+		m[2][2] = scale.z;
 		
 		return this;
 	}
@@ -385,6 +376,7 @@ public class Matrix4 extends Matrix {
 //				"|" + m[3][0] + " " + m[3][1] + " " + m[3][2] + " " + m[3][3] + "|";
 //	}
 	
+	@Override
 	public Matrix4 clone() {
 		return new Matrix4(this);
 	}

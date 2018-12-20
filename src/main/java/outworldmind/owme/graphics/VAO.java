@@ -3,10 +3,15 @@ package outworldmind.owme.graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 
 public class VAO implements Geometry {
 
@@ -21,7 +26,7 @@ public class VAO implements Geometry {
 	}
 	
 	public static VAO create() {
-		var id = GL30.glGenVertexArrays();
+		var id = glGenVertexArrays();
 		return new VAO(id);
 	}
 	
@@ -34,28 +39,34 @@ public class VAO implements Geometry {
 	}
 	
 	public void createIndexBuffer(int[] indexData) {
-		indicies = VBO.create(GL15.GL_ELEMENT_ARRAY_BUFFER, indexData);
+		indicies = VBO.create(GL_ELEMENT_ARRAY_BUFFER, indexData);
 	}
 	
-	public void createFloatBuffer(int attribute, int dimention, float[] bufferData) {
-		var vbo = VBO.create(GL15.GL_ARRAY_BUFFER, bufferData);
-		GL20.glVertexAttribPointer(attribute, dimention, GL11.GL_FLOAT, false, dimention * 4, 0);
+	/**
+	 * Create float buffer binded to GPU by creation order.
+	 * 
+	 * @param dimension
+	 * @param float[] bufferData
+	 */
+	public void createFloatBuffer(int dimension, float[] bufferData) {
+		var vbo = VBO.create(GL_ARRAY_BUFFER, bufferData);
+		glVertexAttribPointer(vbos.size(), dimension, GL_FLOAT, false, dimension * Float.BYTES, 0);
 		vbos.add(vbo);
 	}
 	
 	@Override
 	public void bind() {
-		GL30.glBindVertexArray(id);
+		glBindVertexArray(id);
 		for (var i = 0; i < vbos.size(); i++)
-			GL20.glEnableVertexAttribArray(i);
+			glEnableVertexAttribArray(i);
 	}
 	
 	@Override
 	public void unbind() {
 		if (initialized)
 			for (var i = 0; i < vbos.size(); i++)
-				GL20.glDisableVertexAttribArray(i);
-		GL30.glBindVertexArray(0);
+				glDisableVertexAttribArray(i);
+		glBindVertexArray(0);
 		initialized = true;
 	}
 	
@@ -66,7 +77,7 @@ public class VAO implements Geometry {
 	
 	@Override
 	public void delete() {
-		GL30.glDeleteVertexArrays(id);
+		glDeleteVertexArrays(id);
 		for (var vbo : vbos)
 			vbo.delete();
 		

@@ -5,7 +5,6 @@ import outworldmind.owme.maths.Matrix4;
 
 public class Camera extends SceneUnit {
 	
-	private Matrix4 View = new Matrix4();
 	private Matrix4 Projection = new Matrix4();
 	private Viewport viewport;
 	private float fov;
@@ -19,21 +18,13 @@ public class Camera extends SceneUnit {
 		this.farPlane = farPlane;
 		this.viewport = viewport;
 		updateProjectionMatrix();
-		update();
-	}
-	
-	public Matrix4 getView() {
-		return View;
 	}
 	
 	public Matrix4 getProjection() {
 		return Projection;
 	}
 	
-	public void update() {
-	}
-	
-	public void updateProjectionMatrix() {
+	private void updateProjectionMatrix() {
 		Projection.makeProjectionMatrix(
 				fov, nearPlane, farPlane, 
 				viewport.getWidth(), viewport.getHeight());
