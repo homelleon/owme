@@ -15,11 +15,17 @@ public class ConfigValidator {
 		this.config = config;
 		checks = new ArrayList<ValidCheck>();
 		succeed = new ArrayList<String>();
-		failed = new ArrayList<String>();		
+		failed = new ArrayList<String>();
 	}
 	
 	public ConfigValidator addCheck(String name, String className, boolean canBeNull) {
 		checks.add(new ValidCheck(name, className, canBeNull));
+		
+		return this;
+	}
+	
+	public ConfigValidator addCheck(String name, String className, boolean canBeNull, boolean isOptional) {
+		checks.add(new ValidCheck(name, className, canBeNull).makeOptional(isOptional));
 		
 		return this;
 	}
@@ -30,7 +36,7 @@ public class ConfigValidator {
 		var params = config.getAllParams();
 		
 		checks.forEach(check -> {
-			var list = checkIfValid(check, params) ? succeed : failed;			
+			var list = checkIfValid(check, params) ? succeed : (check.getIsOptional() ? succeed : failed);			
 			list.add(check.getName());
 		});
 		
@@ -69,6 +75,7 @@ class ValidCheck {
 	private String name;
 	private String className;
 	private boolean canBeNull = false;
+	private boolean isOptional = false;
 	
 	protected ValidCheck(String name, String className, boolean canBeNull) {
 		this.name = name;
@@ -79,6 +86,12 @@ class ValidCheck {
 	protected ValidCheck(String name, String className) {
 		this.name = name;
 		this.className = className;
+	}
+	
+	protected ValidCheck makeOptional(boolean value) {
+		isOptional = value;
+		
+		return this;
 	}
 	
 	protected String getName() {
@@ -93,6 +106,9 @@ class ValidCheck {
 		return canBeNull;
 	}
 	
+	protected boolean getIsOptional() {
+		return isOptional;
+	}
 }
 
 class ParamValidationException extends Exception {

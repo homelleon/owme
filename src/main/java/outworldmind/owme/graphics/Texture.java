@@ -4,9 +4,12 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import java.awt.image.BufferedImage;
 
+import outworldmind.owme.core.Console;
 import outworldmind.owme.tools.ImageLoader;
 import outworldmind.owme.tools.TextureUtil;
 
@@ -22,12 +25,14 @@ public class Texture {
 	private int id;
 	private String name;
 	private int type;
+	private int bindLocation = 0;
+	private boolean hasBindLocation = false;
 	private int width;
 	private int height;
 	private int filterMode = FILTER_NONE;
 	private int wrapMode = WRAP_NONE;
 	private BufferedImage image;
-	private boolean initialized = false;
+	private boolean uploaded = false;
 	
 	public Texture() {
 		this(null);
@@ -60,21 +65,44 @@ public class Texture {
 		id = glGenTextures();
 	}
 	
-	public void init() {
-		if (initialized) return;
-		initialized = true;
-		generateTexture();
-		bind();
-		TextureUtil.uploadImage(image, type);
+	public void setBindLocation(int location) {
+		bindLocation = location;
+		
+		hasBindLocation = true;
+	}
+	
+	public int getBindLocation() {
+		return bindLocation;
+	}
+	
+	public boolean hasBindLocation() {
+		return hasBindLocation;
 	}
 	
 	public void bind() {
-		if (!initialized) init();
+		if (hasBindLocation && uploaded)
+			active(bindLocation);
 		glBindTexture(type, id);
+	}
+	
+	public void active(int location) {
+		if (location < 0 || location >= 31) 
+			throw new IndexOutOfBoundsException("Incorrect location at texture activation!");
+		
+		glActiveTexture(GL_TEXTURE0 + location);	
 	}
 	
 	public static void unbind() {
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	
+	public void load(String path, boolean doUpload) {
+		if (path == null) return;
+		
+		image = ImageLoader.INSTANCE.load(path);
+		width = image.getWidth();
+		height = image.getHeight();
+		if (doUpload) upload();
 	}
 	
 	public void load(String path) {
@@ -83,6 +111,18 @@ public class Texture {
 		image = ImageLoader.INSTANCE.load(path);
 		width = image.getWidth();
 		height = image.getHeight();
+		upload();
+	}
+	
+	public void upload() {
+		if (uploaded) {
+			Console.logErr(getClass().getSimpleName() + " " + name + " has already been uploaded");
+			return;
+		}
+		
+		generateTexture();
+		bind();
+		TextureUtil.uploadImage(image, type);
 	}
 	
 	public String getName() {
@@ -102,7 +142,7 @@ public class Texture {
 	}
 	
 	public boolean destroy() {
-		if (!initialized) return false;
+		if (!uploaded) return false;
 		
 		glDeleteTextures(id);
 		return true;

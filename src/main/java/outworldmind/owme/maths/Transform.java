@@ -104,11 +104,12 @@ public class Transform {
 	 */
 	public Transform update() {
 		if (!needUpdate) return this;
-		matrix.setIdentity();
 		
-		matrix.scale(scale);
-		matrix.translate(position);
-		matrix.rotate(rotation.getRadians());
+		matrix
+			.setIdentity()
+			.translate(position)
+			.rotate(rotation.getRadians())
+			.scale(scale);
 		
 		needUpdate = false;
 		

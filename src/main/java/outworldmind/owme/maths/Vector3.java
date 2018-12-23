@@ -14,6 +14,36 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		set(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
+	public Vector3(Float x, Float y, Integer z) {
+		this();
+		set(x.floatValue(), y.floatValue(), z.floatValue());
+	}
+	
+	public Vector3(Float x, Integer y, Integer z) {
+		this();
+		set(x.floatValue(), y.floatValue(), z.floatValue());
+	}
+	
+	public Vector3(Float x, Integer y, Float z) {
+		this();
+		set(x.floatValue(), y.floatValue(), z.floatValue());
+	}
+	
+	public Vector3(Integer x, Integer y, Float z) {
+		this();
+		set(x.floatValue(), y.floatValue(), z.floatValue());
+	}
+	
+	public Vector3(Integer x, Float y, Integer z) {
+		this();
+		set(x.floatValue(), y.floatValue(), z.floatValue());
+	}
+	
+	public Vector3(Integer x, Float y, Float z) {
+		this();
+		set(x.floatValue(), y.floatValue(), z.floatValue());
+	}
+	
 	public Vector3(Double x, Double y, Double z) {
 		this();
 		set(x.floatValue(), y.floatValue(), z.floatValue());

@@ -263,6 +263,7 @@ public class Matrix4 extends Matrix {
 		this.m[2][3] = -1;
 		this.m[3][2] = -((2 * nearPlane * farPlane) / frustrum_length);
 		this.m[3][3] = 0;
+		
 		return this;
 	}
 	
@@ -325,9 +326,20 @@ public class Matrix4 extends Matrix {
 	}
 	
 	public Matrix4 scale(Vector3 scale) {
-		m[0][0] = scale.x;
-		m[1][1] = scale.y;
-		m[2][2] = scale.z;
+		m[0][0] *= scale.x;
+		m[0][1] *= scale.x;
+		m[0][2] *= scale.x;
+		m[0][3] *= scale.x;
+		
+		m[1][0] *= scale.y;
+		m[1][1] *= scale.y;
+		m[1][2] *= scale.y;
+		m[1][3] *= scale.y;
+		
+		m[2][0] *= scale.z;
+		m[2][1] *= scale.z;
+		m[2][2] *= scale.z;
+		m[2][3] *= scale.z;
 		
 		return this;
 	}

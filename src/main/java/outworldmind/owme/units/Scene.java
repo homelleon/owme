@@ -37,7 +37,7 @@ public class Scene {
 		var material = model.getMaterial();
 		var geometry = model.getGeometry();
 
-		shader.setValue(EntityShader.VIEW_MATRIX, camera.getTransformMatrix());
+		shader.setValue(EntityShader.VIEW_MATRIX, camera.getView());
 		material.getTexture(Material.DIFFUSE).bind();
 		
 		shader.start();

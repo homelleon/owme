@@ -70,7 +70,6 @@ public abstract class Shader {
 			throw new IllegalStateException(this.getClass().getSimpleName() +  " validation failed: " + glGetProgramInfoLog(id, 1024));
 		
 		loadUniformLocations();
-		bindAttributes();
 		
 		return this;
 	}
@@ -90,8 +89,7 @@ public abstract class Shader {
 	protected abstract void bindAttributes();
 	
 	private void loadUniformLocations() {
-		variables.values().stream().filter(variable -> variable.isTypeOf(Texture.class)).forEach(this::addUniform);
-		variables.values().stream().filter(variable -> !variable.isTypeOf(Texture.class)).forEach(this::addUniform);
+		variables.values().stream().forEach(this::addUniform);
 	}
 	
 	private void addUniform(ShaderVariable variable) {

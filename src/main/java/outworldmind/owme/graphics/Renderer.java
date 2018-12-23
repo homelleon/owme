@@ -54,7 +54,7 @@ public class Renderer {
 		geometry.bind();
 //		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		GL11.glDrawElements(GL11.GL_TRIANGLES, geometry.size(), GL11.GL_UNSIGNED_INT, 0);
-		geometry.unbind();
+//		geometry.unbind();
 	}
 
 }

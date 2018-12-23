@@ -43,103 +43,101 @@ public class OBJModelLoader {
 		this.generateTangents = generateTangents;
 	}
 	
-	public Model[] load(String path, String objFile, String mtlFile) {
+	private void loadMaterials(String path, String name) {
+		BufferedReader mtlReader = null;
+			try {
+				InputStreamReader inputStream = new InputStreamReader(OBJModelLoader.class.getResourceAsStream(path + "/" + name + ".mtl"));
+				mtlReader = new BufferedReader(inputStream);
+				String line;
+				String currentMtl = "";
+				
+				while ((line = mtlReader.readLine()) != null) {
+					
+					String[] tokens = line.split(" ");
+					tokens = OBJUtil.removeEmptyStrings(tokens);
+					
+					if (tokens.length == 0)	continue;
+					
+					if (tokens[0].equals("newmtl")) {
+						Material material = new Material(tokens[1]);
+						materials.put(tokens[1], material);
+						currentMtl = tokens[1];
+					}
+					
+					if (tokens.length == 1) continue;
+					
+					if (tokens[0].equals("Ka")) {
+						Color color = new Color(Float.valueOf(tokens[1]), Float.valueOf(tokens[2]), Float.valueOf(tokens[3]));
+						materials.get(currentMtl).addColor(Material.AMBIENT, color);
+					}
+					
+					if (tokens[0].equals("Kd")) {
+						Color color = new Color(Float.valueOf(tokens[1]), Float.valueOf(tokens[2]), Float.valueOf(tokens[3]));
+						materials.get(currentMtl).addColor(Material.DIFFUSE, color);
+					}
+					
+					if (tokens[0].equals("Ks")) {
+						Color color = new Color(Float.valueOf(tokens[1]), Float.valueOf(tokens[2]), Float.valueOf(tokens[3]));
+						materials.get(currentMtl).addColor(Material.SPECULAR, color);
+					}
+					
+					if (tokens[0].equals("map_Kd"))
+						materials.get(currentMtl).addTexture(Material.DIFFUSE, 
+								new TextureBuilder()
+								.setName(Material.DIFFUSE)
+								.setPath(path + tokens[1])
+								.build());
+					
+					if (tokens[0].equals("map_Ks"))
+						materials.get(currentMtl).addTexture(Material.SPECULAR, 
+								new TextureBuilder()
+								.setName(Material.SPECULAR)
+								.setPath(path + tokens[1])
+								.build());
+
+					if (tokens[0].equals("map_Ns"))
+						//TODO: specular highlight component
+						
+					if (tokens[0].equals("map_d"))
+						//TODO:
+						
+					if (tokens[0].equals("disp"))
+						//TODO: displacement
+						
+					if (tokens[0].equals("decal"))
+						//TODO: 
+						
+					if (tokens[0].equals("map_bump"))
+						materials.get(currentMtl).addTexture(Material.BUMP, 
+								new TextureBuilder()
+								.setName(Material.BUMP)
+								.setPath(path + tokens[1])
+								.build());
+					
+					if (tokens[0].equals("bump"))
+						//TODO: bump map with params
+						
+					if (tokens[0].equals("illum"))
+						materials.get(currentMtl).addValue(Material.ILLUMINATION, Float.valueOf(tokens[1]));
+						
+					if (tokens[0].equals("Ns"))
+						materials.get(currentMtl).addValue(Material.SHINISESS, Float.valueOf(tokens[1]));
+				}
+				mtlReader.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+				System.exit(1);
+			}
+	}
+	
+	public Model[] load(String path, String objFile) {
 		long time = System.currentTimeMillis();
 		
 			BufferedReader meshReader = null;
-			BufferedReader mtlReader = null;
-			
-			// load .mtl
-			if (mtlFile != null) {
-				try {
-					InputStreamReader inputStream = new InputStreamReader(Class.class.getResourceAsStream(path + "/" +  mtlFile));
-					mtlReader = new BufferedReader(inputStream);
-					String line;
-					String currentMtl = "";
-					
-					while ((line = mtlReader.readLine()) != null) {
-						
-						String[] tokens = line.split(" ");
-						tokens = OBJUtil.removeEmptyStrings(tokens);
-						
-						if (tokens.length == 0)	continue;
-						
-						if (tokens[0].equals("newmtl")) {
-							Material material = new Material(tokens[1]);
-							materials.put(tokens[1], material);
-							currentMtl = tokens[1];
-						}
-						
-						if (tokens.length == 1) continue;
-						
-						if (tokens[0].equals("Ka")) {
-							Color color = new Color(Float.valueOf(tokens[1]), Float.valueOf(tokens[2]), Float.valueOf(tokens[3]));
-							materials.get(currentMtl).addColor(Material.AMBIENT, color);
-						}
-						
-						if (tokens[0].equals("Kd")) {
-							Color color = new Color(Float.valueOf(tokens[1]), Float.valueOf(tokens[2]), Float.valueOf(tokens[3]));
-							materials.get(currentMtl).addColor(Material.DIFFUSE, color);
-						}
-						
-						if (tokens[0].equals("Ks")) {
-							Color color = new Color(Float.valueOf(tokens[1]), Float.valueOf(tokens[2]), Float.valueOf(tokens[3]));
-							materials.get(currentMtl).addColor(Material.SPECULAR, color);
-						}
-						
-						if (tokens[0].equals("map_Kd"))
-							materials.get(currentMtl).addTexture(Material.DIFFUSE, 
-									new TextureBuilder()
-									.setName(Material.DIFFUSE)
-									.setPath(path + "/" + tokens[1])
-									.build());
-						
-						if (tokens[0].equals("map_Ks"))
-							materials.get(currentMtl).addTexture(Material.SPECULAR, 
-									new TextureBuilder()
-									.setName(Material.SPECULAR)
-									.setPath(path + "/" + tokens[1])
-									.build());
-
-						if (tokens[0].equals("map_Ns"))
-							//TODO: specular highlight component
-							
-						if (tokens[0].equals("map_d"))
-							//TODO:
-							
-						if (tokens[0].equals("disp"))
-							//TODO: displacement
-							
-						if (tokens[0].equals("decal"))
-							//TODO: 
-							
-						if (tokens[0].equals("map_bump"))
-							materials.get(currentMtl).addTexture(Material.BUMP, 
-									new TextureBuilder()
-									.setName(Material.BUMP)
-									.setPath(path + "/" + tokens[1])
-									.build());
-						
-						if (tokens[0].equals("bump"))
-							//TODO: bump map with params
-							
-						if (tokens[0].equals("illum"))
-							materials.get(currentMtl).addValue(Material.ILLUMINATION, Float.valueOf(tokens[1]));
-							
-						if (tokens[0].equals("Ns"))
-							materials.get(currentMtl).addValue(Material.SHINISESS, Float.valueOf(tokens[1]));
-					}
-					mtlReader.close();
-				} catch(Exception e) {
-					e.printStackTrace();
-					System.exit(1);
-				}
-			}
-				
 			// load .obj
 			try {
 				System.out.println(path + objFile + ".obj");
-				InputStreamReader inputStream = new InputStreamReader(Class.class.getResourceAsStream(path + objFile + ".obj"));
+				InputStreamReader inputStream = new InputStreamReader(OBJModelLoader.class.getResourceAsStream(path + objFile + ".obj"));
 				meshReader = new BufferedReader(inputStream);
 				String line;
 				while ((line = meshReader.readLine()) != null) {
@@ -163,12 +161,7 @@ public class OBJModelLoader {
 					
 					if (tokens[0].equals("vt"))
 						texCoords.add(new Vector2(Float.valueOf(tokens[1]), Float.valueOf(tokens[2])));
-					
-					if (tokens[0].equals("o")) {
-						MeshObject object = new MeshObject();
-						object.setName(tokens[1]);
-						objects.add(new MeshObject());
-					}
+
 					
 					if (tokens[0].equals("g")) {
 						PolygonGroup polygonGroup = new PolygonGroup();	
@@ -176,6 +169,12 @@ public class OBJModelLoader {
 							polygonGroup.setName(tokens[1]);
 						if (objects.isEmpty()) objects.add(new MeshObject());
 						objects.peekLast().getPolygonGroups().add(polygonGroup);
+					}
+					
+					if (tokens[0].equals("o")) {
+						MeshObject object = new MeshObject();
+						object.setName(tokens[1]);
+						objects.add(new MeshObject());
 					}
 					
 					if (tokens[0].equals("usemtl")) {
@@ -235,24 +234,28 @@ public class OBJModelLoader {
 					}
 				}					
 					
-				var geometries = new ArrayList<GeometryBuilder>();
+				var models = new ArrayList<Model>();
 				
 				for (var object : objects) {
 					for (var polygonGroup : object.getPolygonGroups()) {
 						for (var polygon : polygonGroup.getPolygons()) {							
 							generatePolygon(polygonGroup.getSmoothingGroups(), polygon);
-							GeometryBuilder geometry = convertToBuilder(polygon);			
-							geometries.add(geometry);
+							var geometry = convertToBuilder(polygon);
+							var model = new Model()
+									.setGeometry(geometry.build());
+							var materialName = polygon.getMaterial();
+							if (materialName != null) {
+								loadMaterials(path, materialName);
+								model.setMaterial(materials.get(materialName));
+							}
+							models.add(model);
 						}
 					}
 				}
 				
 				Console.log("obj loading time : " + (System.currentTimeMillis() - time) + "ms");
 				
-				return geometries.stream()
-						.map(geometry -> new Model()
-								.setGeometry(geometry.build()))
-						.toArray(Model[]::new);
+				return models.toArray(Model[]::new);
 				
 			} catch (Exception e) {
 				e.printStackTrace();

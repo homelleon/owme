@@ -6,7 +6,12 @@ public class Engine {
 	public final static String PARAM_WINDOW_WIDTH = "window.width";
 	public final static String PARAM_WINDOW_HEIGHT = "window.height";
 	public final static String PARAM_INTEGER = "java.lang.Integer";
+	public final static String PARAM_FLOAT = "java.lang.Float";
 	public final static String PARAM_STRING = "java.lang.String";
+	
+	public final static String PARAM_CAMERA_FOV = "camera.fov";
+	public final static String PARAM_CAMERA_NEAR_PLANE = "camera.nearplane";
+	public final static String PARAM_CAMERA_FAR_PLANE = "camera.farplane";
 	
 	private Config config;
 	private Window window;
@@ -30,7 +35,10 @@ public class Engine {
 		validator = new ConfigValidator(config);
 		validator
 			.addCheck(PARAM_WINDOW_WIDTH, PARAM_INTEGER, false)
-			.addCheck(PARAM_WINDOW_HEIGHT, PARAM_INTEGER, false);
+			.addCheck(PARAM_WINDOW_HEIGHT, PARAM_INTEGER, false)
+			.addCheck(PARAM_CAMERA_FOV, PARAM_FLOAT, false, true)
+			.addCheck(PARAM_CAMERA_NEAR_PLANE, PARAM_FLOAT, false, true)
+			.addCheck(PARAM_CAMERA_FAR_PLANE, PARAM_FLOAT, false, true);
 	}
 	
 	private void validateConfig() {
