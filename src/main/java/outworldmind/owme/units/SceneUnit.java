@@ -10,8 +10,8 @@ public class SceneUnit extends Node {
 	
 	private int id;
 	
-	private Transform localTransform = new Transform();
-	private Transform globalTransform = new Transform();
+	protected Transform localTransform = new Transform();
+	protected Transform globalTransform = new Transform();
 	
 	protected SceneUnit() {
 		super();

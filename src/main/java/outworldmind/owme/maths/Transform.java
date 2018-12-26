@@ -116,4 +116,8 @@ public class Transform {
 		return this;
 	}
 	
+	public boolean doesNeedUpdate() {
+		return needUpdate;
+	}
+	
 }

@@ -1,7 +1,7 @@
 package outworldmind.owme.graphics;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import outworldmind.owme.maths.Color;
@@ -53,8 +53,8 @@ public class Material {
 		return textures.get(name);
 	}
 	
-	public List<Texture> getTextures() {
-		return (List<Texture>) textures.values();
+	public Collection<Texture> getTextures() {
+		return textures.values();
 	}
 	
 	public Material addColor(String name, Color color) {
@@ -67,8 +67,8 @@ public class Material {
 		return colors.get(name);
 	}
 	
-	public List<Color> getColors() {
-		return (List<Color>) colors.values();
+	public Collection<Color> getColors() {
+		return colors.values();
 	}
 	
 	public Material addValue(String name, float value) {

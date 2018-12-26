@@ -79,7 +79,7 @@ public class App {
     	var spartan = new DrawUnit()
         		.move(new Vector3(1, 0.1f, -1))
         		.scaleTo(new Vector3(0.005f))
-    			.setModel(new OBJModelLoader().load("/model/", "spartan")[0]
+    			.setModel(new OBJModelLoader().load("/model/spartan/", "spartan")[0]
 	    			.setRenderer(renderer)
 	    			.setShader(shader));
 
@@ -87,14 +87,13 @@ public class App {
     			.setCamera(camera)
     			.add(unit);
     	
-    	IntStream.range(0, 10)
-    		.mapToObj(index -> spartan.clone().move(new Vector3(index * -0.2f, 0, 0)))
+    	IntStream.range(0, 100)
+    		.mapToObj(index -> spartan.clone().move(new Vector3(Math.floorDiv(index, 10) * -0.2f, 0, index % 10 * -0.2f)))
     		.forEach(scene::add);
-    	
-    	shader.setValue(EntityShader.PROJECTION_MATRIX, camera.getProjection());
     	
     	while (true) {
     		if (owme.getWindow().getCloseRequest()) break;
+    		camera.rotate(new Rotation(0, 1, 0));
     		scene.draw();
     		owme.update();
     	}

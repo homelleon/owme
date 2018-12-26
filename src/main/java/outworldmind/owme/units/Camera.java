@@ -13,6 +13,7 @@ public class Camera extends SceneUnit {
 	private float fov;
 	private float nearPlane;
 	private float farPlane;
+	private boolean needsProjUpdate = true;
 	
 	public Camera(float fov, float nearPlane, float farPlane, Viewport viewport) {
 		super();
@@ -20,7 +21,7 @@ public class Camera extends SceneUnit {
 		this.nearPlane = nearPlane;
 		this.farPlane = farPlane;
 		this.viewport = viewport;
-		updateProjectionMatrix();
+		update();
 	}
 	
 	public Camera(Config config) {
@@ -32,21 +33,80 @@ public class Camera extends SceneUnit {
 						(int) config.getParam(Engine.PARAM_WINDOW_HEIGHT)));
 	}
 	
-	public Matrix4 getView() {		
-		return View
-				.setIdentity()
-				.rotate(getRotation().getRadians())
-				.translate(getPosition().negate());
+	@Override
+	public Camera update() {
+		if (needsProjUpdate)
+			updateProjectionMatrix();
+		
+		if (globalTransform.doesNeedUpdate())
+			updateViewMatrix();
+		super.update();
+		
+		return this;
+	}
+	
+	private void updateViewMatrix() {
+		View
+			.setIdentity()
+			.rotate(getRotation().getRadians())
+			.translate(getPosition().negate());
+	}
+	
+	private void updateProjectionMatrix() {
+		if (!needsProjUpdate) return;
+		
+		Projection.makeProjectionMatrix(
+				fov, nearPlane, farPlane, 
+				viewport.getWidth(), viewport.getHeight());
+		needsProjUpdate = false;
+	}
+	
+	public Matrix4 getView() {
+		return View;
 	}
 	
 	public Matrix4 getProjection() {
 		return Projection;
 	}
-	
-	private void updateProjectionMatrix() {
-		Projection.makeProjectionMatrix(
-				fov, nearPlane, farPlane, 
-				viewport.getWidth(), viewport.getHeight());
+
+	public float getFov() {
+		return fov;
 	}
+
+	public void setFov(float fov) {
+		this.fov = fov;
+		
+		needsProjUpdate = true;
+	}
+
+	public float getNearPlane() {
+		return nearPlane;
+	}
+
+	public void setNearPlane(float nearPlane) {
+		this.nearPlane = nearPlane;
+		
+		needsProjUpdate = true;
+	}
+
+	public float getFarPlane() {
+		return farPlane;
+	}
+
+	public void setFarPlane(float farPlane) {
+		this.farPlane = farPlane;
+		
+		needsProjUpdate = true;
+	}
+	
+	public boolean doesNeedProjectionUpdate() {
+		return needsProjUpdate;
+	}
+	
+	public boolean doesNeedViewUpdate() {
+		return globalTransform.doesNeedUpdate();
+	}
+	
+	
 
 }

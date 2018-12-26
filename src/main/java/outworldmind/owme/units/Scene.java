@@ -9,16 +9,20 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import outworldmind.owme.graphics.Material;
 import outworldmind.owme.graphics.Model;
-import outworldmind.owme.shaders.EntityShader;
+import outworldmind.owme.graphics.Shader;
+import outworldmind.owme.graphics.Texture;
 
 public class Scene {
 	
 	private Camera camera;
 	private List<SceneUnit> units = new ArrayList<SceneUnit>();
+	private boolean needProjUpdate = true;
+	private boolean needViewUpdate = true;
 	
 	public Scene draw() {
+		checkCameraUpdate();
+		
 		camera.update();
 		units.forEach(SceneUnit::update);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -31,21 +35,53 @@ public class Scene {
 		return this;
 	}
 	
+	private void checkCameraUpdate() {
+		if (camera.doesNeedProjectionUpdate())
+			needProjUpdate = true;
+		if (camera.doesNeedViewUpdate())
+			needViewUpdate = true;
+	}
+	
 	private void draw(Model model, List<DrawUnit> units) {	
 		var renderer = model.getRenderer();
 		var shader = model.getShader();
 		var material = model.getMaterial();
 		var geometry = model.getGeometry();
-
-		shader.setValue(EntityShader.VIEW_MATRIX, camera.getView());
-		material.getTexture(Material.DIFFUSE).bind();
+		
+		if (doProjectionUpdateOnRequired())
+			shader.setValue(Shader.PROJECTION_MATRIX, camera.getProjection());
+		
+		if (doViewUpdateOnRequire())
+			shader.setValue(Shader.VIEW_MATRIX, camera.getView());
+		
+		material.getTextures().forEach(this::bindTextureIfNotNull);
 		
 		shader.start();
 		units.forEach(unit -> {
-			shader.setValue(EntityShader.TRANSFORMATION_MATRIX, unit.getTransformMatrix());
+			shader.setValue(Shader.TRANSFORMATION_MATRIX, unit.getTransformMatrix());
 			shader.update();
 			renderer.draw(geometry);
 		});
+	}
+	
+	public boolean doProjectionUpdateOnRequired() {
+		if (!needProjUpdate) return false;
+		needProjUpdate = false;
+		
+		return true;
+	}
+	
+	public boolean doViewUpdateOnRequire() {
+		if (!needViewUpdate) return false;
+		needViewUpdate = false;
+		
+		return true;
+	}
+	
+	public void bindTextureIfNotNull(Texture texture) {
+		if (texture == null) return;
+		
+		texture.bind();
 	}
 	
 	public Camera getCamera() {

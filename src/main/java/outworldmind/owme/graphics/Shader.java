@@ -27,6 +27,16 @@ public abstract class Shader {
 	public static final String TESS_EVALUATION_STAGE = "tessellation evaluation";
 	public static final String TESS_CONTROL_STAGE = "tessellation control";
 	
+	public static final String TRANSFORMATION_MATRIX = "Transformation";
+	public static final String PROJECTION_MATRIX = "Projection";
+	public static final String VIEW_MATRIX = "View";
+	
+	public static final String DIFFUSE_MAP = "diffuseMap";
+	
+	public static final String POSITION_ATTRIBUTE = "Position";
+	public static final String NORMAL_ATTRIBUTE = "Normal";
+	public static final String TEXCOORDS_ATTRIBUTE = "TexCoords";
+	
 	private int id;
 
 	private Map<String, ShaderVariable> variables;

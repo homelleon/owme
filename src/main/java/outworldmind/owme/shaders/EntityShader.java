@@ -13,16 +13,6 @@ public class EntityShader extends Shader {
 	private static final String VERTEX_SHADER = "/shader/entity_v.glsl";
 	private static final String FRAGMENT_SHADER = "/shader/entity_f.glsl";
 	
-	public static final String TRANSFORMATION_MATRIX = "Transformation";
-	public static final String PROJECTION_MATRIX = "Projection";
-	public static final String VIEW_MATRIX = "View";
-	
-	public static final String DIFFUSE_MAP = "diffuseMap";
-	
-	private static final String POSITION_ATTRIBUTE = "Position";
-	private static final String NORMAL_ATTRIBUTE = "Normal";
-	private static final String TEXCOORDS_ATTRIBUTE = "TexCoords";
-	
 	public EntityShader() {
 		super();
 		addStages();
