@@ -9,15 +9,22 @@ public class Vector2 extends Vector<Vector2> {
 	}
 	
 	public Vector2(Float x, Float y) {
-		this.x = x;
-		this.y = y;
+		this();
+		copy(x, y);
 	}
 	
 	public Vector2(Integer x, Integer y) {
-		this((float) x, (float) y);
+		this();
+		copy(x, y);
+	}
+	
+	public Vector2(Vector3 vector) {
+		this();
+		copy(vector);
 	}
 	
 	public Vector2(Vector2 vector) {
+		this();
 		copy(vector);
 	}
 	
@@ -37,9 +44,30 @@ public class Vector2 extends Vector<Vector2> {
 		return new Vector2(1, 0);
 	}
 	
+	public Vector2 copy(Float x, Float y) {
+		this.x = x.floatValue();
+		this.y = y.floatValue();
+		
+		return this;
+	}
+	
+	public Vector2 copy(Integer x, Integer y) {
+		this.x = x.floatValue();
+		this.y = y.floatValue();
+		
+		return this;
+	}
+	
 	public Vector2 copy(Vector2 vector) {
 		x = vector.x;
 		y = vector.y;
+		
+		return this;
+	}
+	
+	public Vector2 copy(Vector3 vector) {
+		x = vector.x;
+		y = vector.z;
 		
 		return this;
 	}
@@ -115,6 +143,10 @@ public class Vector2 extends Vector<Vector2> {
 		y /= value;
 		
 		return this;
+	}
+	
+	public Vector3 getVector3() {
+		return new Vector3(this);
 	}
 	
 	public String toString() {

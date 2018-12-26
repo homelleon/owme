@@ -98,6 +98,16 @@ public class Camera extends SceneUnit {
 		
 		needsProjUpdate = true;
 	}
+
+	public Viewport getViewport() {
+		return viewport;
+	}
+
+	public void setViewport(Viewport viewport) {
+		this.viewport = viewport;
+		
+		needsProjUpdate = true;
+	}
 	
 	public boolean doesNeedProjectionUpdate() {
 		return needsProjUpdate;

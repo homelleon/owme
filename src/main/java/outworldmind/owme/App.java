@@ -77,9 +77,10 @@ public class App {
 	    			.setShader(shader));
     	
     	var spartan = new DrawUnit()
-        		.move(new Vector3(1, 0.1f, -1))
+        		.move(new Vector3(1, 0.1f, 3))
         		.scaleTo(new Vector3(0.005f))
-    			.setModel(new OBJModelLoader().load("/model/spartan/", "spartan")[0]
+    			.setModel(new OBJModelLoader()
+    					.load("/model/spartan/", "spartan")[0]
 	    			.setRenderer(renderer)
 	    			.setShader(shader));
 
@@ -87,8 +88,12 @@ public class App {
     			.setCamera(camera)
     			.add(unit);
     	
-    	IntStream.range(0, 100)
-    		.mapToObj(index -> spartan.clone().move(new Vector3(Math.floorDiv(index, 10) * -0.2f, 0, index % 10 * -0.2f)))
+    	
+    	IntStream.range(0, 5000)
+    		.mapToObj(index -> spartan.clone().move(
+    				new Vector3(Math.floorDiv(index, 100) * -0.2f, 
+					0, 
+					-0.5f * Math.floorMod(index, 10) -0.2f * Math.floorMod(index, 100))))
     		.forEach(scene::add);
     	
     	while (true) {

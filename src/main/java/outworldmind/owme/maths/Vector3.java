@@ -11,47 +11,52 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	
 	public Vector3(Float x, Float y, Float z) {
 		this();
-		set(x.floatValue(), y.floatValue(), z.floatValue());
+		copy(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Float x, Float y, Integer z) {
 		this();
-		set(x.floatValue(), y.floatValue(), z.floatValue());
+		copy(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Float x, Integer y, Integer z) {
 		this();
-		set(x.floatValue(), y.floatValue(), z.floatValue());
+		copy(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Float x, Integer y, Float z) {
 		this();
-		set(x.floatValue(), y.floatValue(), z.floatValue());
+		copy(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Integer x, Integer y, Float z) {
 		this();
-		set(x.floatValue(), y.floatValue(), z.floatValue());
+		copy(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Integer x, Float y, Integer z) {
 		this();
-		set(x.floatValue(), y.floatValue(), z.floatValue());
+		copy(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Integer x, Float y, Float z) {
 		this();
-		set(x.floatValue(), y.floatValue(), z.floatValue());
+		copy(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Double x, Double y, Double z) {
 		this();
-		set(x.floatValue(), y.floatValue(), z.floatValue());
+		copy(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
 	public Vector3(Integer x, Integer y, Integer z) {
 		this();
-		set(x.floatValue(), y.floatValue(), z.floatValue());
+		copy(x.floatValue(), y.floatValue(), z.floatValue());
+	}
+	
+	public Vector3(Vector2 vector) {
+		this();
+		copy(vector);
 	}
 	
 	public Vector3(Vector3 vector) {
@@ -71,12 +76,12 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 	
 	public Vector3(Float value) {
 		this();
-		set(value);
+		copy(value);
 	}
 	
 	public Vector3(Integer value) {
 		this();
-		set(value);
+		copy(value);
 	}
 	
 	public static Vector3 front() {
@@ -103,7 +108,7 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return new Vector3(0, -1, 0);
 	}
 	
-	public Vector3 set(Float x, Float y, Float z) {
+	public Vector3 copy(Float x, Float y, Float z) {
 		this.x = x.floatValue();
 		this.y = y.floatValue();
 		this.z = z.floatValue();
@@ -111,17 +116,25 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
-	public Vector3 set(Integer value) {
-		set(value.floatValue());
+	public Vector3 copy(Integer value) {
+		copy(value.floatValue());
 		
 		return this;
 	}
 	
-	public Vector3 set(Float value) {
+	public Vector3 copy(Float value) {
 		var floatValue = value.floatValue();
 		this.x = floatValue;
 		this.y = floatValue;
 		this.z = floatValue;
+		
+		return this;
+	}
+	
+	public Vector3 copy(Vector2 vector) {
+		x = vector.x;
+		y = 0;
+		z = vector.y;
 		
 		return this;
 	}
@@ -370,6 +383,10 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		}
 		
 		return 1;
+	}
+	
+	public Vector2 getVector2() {
+		return new Vector2(this);
 	}
 	
 	public float[] toArray() {

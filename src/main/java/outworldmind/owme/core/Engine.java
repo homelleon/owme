@@ -60,6 +60,7 @@ public class Engine {
 		var height = config.getParam(PARAM_WINDOW_HEIGHT);
 		var name = config.getParam(PARAM_WINDOW_NAME);
 		window = new Window((String) name, (int) width, (int) height);
+		window.initialize();
 	}
 	
 	public void update() {
