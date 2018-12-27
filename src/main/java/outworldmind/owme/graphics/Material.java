@@ -82,7 +82,7 @@ public class Material {
 	}
 	
 	public void clear() {
-		textures.values().forEach(Texture::destroy);
+		textures.values().forEach(Texture::dispose);
 		textures.clear();
 		colors.clear();
 		values.clear();

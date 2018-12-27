@@ -10,10 +10,12 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import java.awt.image.BufferedImage;
 
 import outworldmind.owme.core.Console;
+import outworldmind.owme.core.Disposable;
+import outworldmind.owme.core.GC;
 import outworldmind.owme.tools.ImageLoader;
 import outworldmind.owme.tools.TextureUtil;
 
-public class Texture {
+public class Texture implements Disposable{
 	
 	public static final int FILTER_NONE = 0;
 	public static final int FILTER_BILINEAR = 1;
@@ -63,6 +65,7 @@ public class Texture {
 	
 	private void generateTexture() {
 		id = glGenTextures();
+		GC.follow(this);
 	}
 	
 	public void setBindLocation(int location) {
@@ -141,11 +144,11 @@ public class Texture {
 		return id;
 	}
 	
-	public boolean destroy() {
-		if (!uploaded) return false;
+	public void dispose() {
+		GC.forget(this);
+		if (!uploaded) return;
 		
 		glDeleteTextures(id);
-		return true;
 	}
 
 	public int getWrapMode() {

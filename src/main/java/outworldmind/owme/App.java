@@ -102,7 +102,6 @@ public class App {
     		scene.draw();
     		owme.update();
     	}
-    	
     	owme.stop();
     }
 }

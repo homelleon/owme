@@ -6,6 +6,8 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15;
 
+import outworldmind.owme.core.GC;
+
 public class VBO implements Geometry {
 	
 	private final int id;
@@ -15,6 +17,7 @@ public class VBO implements Geometry {
 	private VBO(int id, int type) {
 		this.id = id;
 		this.type = type;
+		GC.follow(this);
 	}
 	
 	public static VBO create(int type, int[] data) {
@@ -76,7 +79,9 @@ public class VBO implements Geometry {
 	}
 	
 	@Override
-	public void delete() {
+	public void dispose() {
+		unbind();
 		GL15.glDeleteBuffers(id);
+		GC.forget(this);
 	}
 }

@@ -68,6 +68,7 @@ public class Engine {
 	}
 	
 	public void stop() {
+		Console.log("released :" + GC.disengage());
 		window.destroy();
 	}
 

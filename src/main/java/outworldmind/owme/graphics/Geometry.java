@@ -1,10 +1,11 @@
 package outworldmind.owme.graphics;
 
-public interface Geometry {
+import outworldmind.owme.core.Disposable;
+
+public interface Geometry extends Disposable {
 	
 	public void bind();
 	public void unbind();
-	public void delete();
 	public int size();
 	
 }
