@@ -25,12 +25,12 @@ public class Camera extends SceneUnit {
 	}
 	
 	public Camera(Config config) {
-		this((float) config.getParam(Engine.PARAM_CAMERA_FOV),
-				(float) config.getParam(Engine.PARAM_CAMERA_NEAR_PLANE),
-				(float) config.getParam(Engine.PARAM_CAMERA_FAR_PLANE),
+		this((float) config.getParam(Config.CAMERA_FOV),
+				(float) config.getParam(Config.CAMERA_NEAR_PLANE),
+				(float) config.getParam(Config.CAMERA_FAR_PLANE),
 				new Viewport(0, 0, 
-						(int) config.getParam(Engine.PARAM_WINDOW_WIDTH),
-						(int) config.getParam(Engine.PARAM_WINDOW_HEIGHT)));
+						(int) config.getParam(Config.WINDOW_WIDTH),
+						(int) config.getParam(Config.WINDOW_HEIGHT)));
 	}
 	
 	@Override

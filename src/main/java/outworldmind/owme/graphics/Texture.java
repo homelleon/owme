@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 
 import outworldmind.owme.core.Console;
 import outworldmind.owme.core.Disposable;
-import outworldmind.owme.core.GC;
+import outworldmind.owme.core.Tools;
 import outworldmind.owme.tools.ImageLoader;
 import outworldmind.owme.tools.TextureUtil;
 
@@ -65,7 +65,7 @@ public class Texture implements Disposable{
 	
 	private void generateTexture() {
 		id = glGenTextures();
-		GC.follow(this);
+		Tools.getGrabageCollector().follow(this);
 	}
 	
 	public void setBindLocation(int location) {
@@ -145,7 +145,7 @@ public class Texture implements Disposable{
 	}
 	
 	public void dispose() {
-		GC.forget(this);
+		Tools.getGrabageCollector().forget(this);
 		if (!uploaded) return;
 		
 		glDeleteTextures(id);

@@ -2,8 +2,7 @@ package outworldmind.owme.core;
 
 import java.util.Date;
 
-public class Logger {
-	
+public class Logger {	
 	public static final int NO_LOG_MODE = 0;
 	public static final int CONSOLE_LOG_MODE = 1;
 	public static final int RECORD_LOG_MODE = 2;
@@ -12,7 +11,11 @@ public class Logger {
 	private int mode = NO_LOG_MODE;
 	private String loggs;
 	
-	Logger(int logMode) {
+	protected Logger(Config config) {
+		this((int) config.getParam(Config.CONSOLE_MODE));
+	}
+	
+	protected Logger(int logMode) {
 		mode = logMode;
 	}
 	

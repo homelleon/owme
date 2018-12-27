@@ -11,16 +11,20 @@ import java.util.List;
  */
 public class GC {
 	
-	private static List<Disposable> objects = new ArrayList<Disposable>();
+	private List<Disposable> objects;
 	
-	private static boolean disengaging = false;
+	private boolean disengaging = false;
+	
+	protected GC() {
+		objects = new ArrayList<Disposable>();
+	}
 	
 	/**
 	 * Release all following objects and return its number.
 	 * 
 	 * @return int count of objects released
 	 */
-	protected static int disengage() {
+	protected int disengage() {
 		if (objects.isEmpty()) return 0;
 		disengaging = true;
 		
@@ -32,11 +36,11 @@ public class GC {
 		return count;
 	}
 	
-	public static void follow(Disposable object) {
+	public void follow(Disposable object) {
 		objects.add(object);
 	}
 	
-	public static boolean forget(Disposable object) {
+	public boolean forget(Disposable object) {
 		if (!objects.contains(object) || disengaging) return false;
 		
 		objects.remove(object);

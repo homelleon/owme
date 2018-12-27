@@ -10,7 +10,7 @@ public class EventsManager {
 	
 	private Map<String, Map<Object, Event>> events;
 	
-	public EventsManager() {
+	protected EventsManager() {
 		events = new HashMap<String, Map<Object, Event>>();
 	}
 	

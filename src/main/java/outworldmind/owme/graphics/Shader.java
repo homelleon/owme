@@ -17,7 +17,6 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import outworldmind.owme.core.Disposable;
-import outworldmind.owme.core.GC;
 import outworldmind.owme.core.Tools;
 
 public abstract class Shader implements Disposable {
@@ -57,7 +56,7 @@ public abstract class Shader implements Disposable {
 	
 	public Shader init() {
 		setId(GL20.glCreateProgram());
-		GC.follow(this);
+		Tools.getGrabageCollector().follow(this);
 		if (id <= 0) {		
 			var message = getClass().getSimpleName() + " creation failed";
 			Tools.getLogger().log(message);
@@ -182,7 +181,7 @@ public abstract class Shader implements Disposable {
 		
 		variables.clear();
 		stages.clear();
-		GC.forget(this);
+		Tools.getGrabageCollector().forget(this);
 	}
 	
 	protected void addVertexStage(StringBuilder code) {

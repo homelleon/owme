@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import outworldmind.owme.core.Config;
 import outworldmind.owme.core.Engine;
+import outworldmind.owme.core.Logger;
 import outworldmind.owme.graphics.Material;
 import outworldmind.owme.graphics.Model;
 import outworldmind.owme.graphics.RenderState;
@@ -26,13 +27,15 @@ public class App {
     public static void main(String[] args ) {
     	var config = new Config();
     	
-    	config.setParam(Engine.PARAM_WINDOW_NAME, "OWME Alpha Test Window");
-    	config.setParam(Engine.PARAM_WINDOW_WIDTH, 1024);
-    	config.setParam(Engine.PARAM_WINDOW_HEIGHT, 768);
+    	config.setParam(Config.WINDOW_NAME, "OWME Alpha Test Window");
+    	config.setParam(Config.WINDOW_WIDTH, 1024);
+    	config.setParam(Config.WINDOW_HEIGHT, 768);
     	
-    	config.setParam(Engine.PARAM_CAMERA_FOV, 50f);
-    	config.setParam(Engine.PARAM_CAMERA_NEAR_PLANE, 0.1f);
-    	config.setParam(Engine.PARAM_CAMERA_FAR_PLANE, 1000f);
+    	config.setParam(Config.CONSOLE_MODE, Logger.NO_LOG_MODE);
+    	
+    	config.setParam(Config.CAMERA_FOV, 50f);
+    	config.setParam(Config.CAMERA_NEAR_PLANE, 0.1f);
+    	config.setParam(Config.CAMERA_FAR_PLANE, 1000f);
     	
     	var owme = new Engine(config);
     	owme.start();

@@ -1,19 +1,19 @@
 package outworldmind.owme.graphics;
 
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import outworldmind.owme.core.GC;
-
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
+import outworldmind.owme.core.Tools;
 
 public class VAO implements Geometry {
 
@@ -25,7 +25,7 @@ public class VAO implements Geometry {
 	private VAO(int id) {
 		this.id = id;
 		vbos = new ArrayList<VBO>();
-		GC.follow(this);
+		Tools.getGrabageCollector().follow(this);
 	}
 	
 	public static VAO create() {
@@ -81,7 +81,7 @@ public class VAO implements Geometry {
 	@Override
 	public void dispose() {
 		unbind();
-		GC.forget(this);
+		Tools.getGrabageCollector().forget(this);
 		if (!initialized) return;
 		glDeleteVertexArrays(id);
 		for (var vbo : vbos)
