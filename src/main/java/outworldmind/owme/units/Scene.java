@@ -6,7 +6,9 @@ import static org.lwjgl.opengl.GL11.glClear;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import outworldmind.owme.graphics.Model;
@@ -17,12 +19,12 @@ public class Scene {
 	
 	private Camera camera;
 	private List<SceneUnit> units = new ArrayList<SceneUnit>();
+	private Map<Integer, Texture> texturesById = new HashMap<Integer, Texture>();
 	private boolean needProjUpdate = true;
 	private boolean needViewUpdate = true;
 	
 	public Scene draw() {
 		checkCameraUpdate();
-		
 		camera.update();
 		units.forEach(SceneUnit::update);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -54,7 +56,7 @@ public class Scene {
 		if (doViewUpdateOnRequire())
 			shader.setValue(Shader.VIEW_MATRIX, camera.getView());
 		
-		material.getTextures().forEach(this::bindTextureIfNotNull);
+		material.getTextures().forEach(this::tryToBindTexture);
 		
 		shader.start();
 		units.forEach(unit -> {
@@ -64,23 +66,27 @@ public class Scene {
 		});
 	}
 	
-	public boolean doProjectionUpdateOnRequired() {
+	private boolean doProjectionUpdateOnRequired() {
 		if (!needProjUpdate) return false;
 		needProjUpdate = false;
 		
 		return true;
 	}
 	
-	public boolean doViewUpdateOnRequire() {
+	private boolean doViewUpdateOnRequire() {
 		if (!needViewUpdate) return false;
 		needViewUpdate = false;
 		
 		return true;
 	}
 	
-	public void bindTextureIfNotNull(Texture texture) {
+	private void tryToBindTexture(Texture texture) {
 		if (texture == null) return;
+		var location = texture.getBindLocation();
+		if (texturesById.containsKey(location) && texturesById.get(location).equals(texture))
+			return;
 		
+		texturesById.put(location, texture);
 		texture.bind();
 	}
 	
@@ -90,6 +96,8 @@ public class Scene {
 	
 	public Scene setCamera(Camera camera) {
 		this.camera = camera;
+		needProjUpdate = true;
+		needViewUpdate = true;
 		
 		return this;
 	}

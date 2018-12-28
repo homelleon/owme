@@ -79,6 +79,28 @@ public class VBO implements Geometry {
 	}
 	
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		var result = 1;
+		result = prime * result + id;
+		result = prime * result + type;
+		result = prime * result + size;
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		if (!(obj instanceof VBO)) return false;
+		
+		VBO other = (VBO) obj;
+		if (id != other.id) return false;
+		return true;
+	}
+	
+	@Override
 	public void dispose() {
 		unbind();
 		GL15.glDeleteBuffers(id);

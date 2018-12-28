@@ -1,5 +1,7 @@
 package outworldmind.owme.maths;
 
+import outworldmind.owme.core.Console;
+
 public class Transform {
 
 	private Vector3 position;
@@ -104,7 +106,6 @@ public class Transform {
 	 */
 	public Transform update() {
 		if (!needUpdate) return this;
-		
 		matrix
 			.setIdentity()
 			.translate(position)

@@ -79,6 +79,29 @@ public class VAO implements Geometry {
 	}
 	
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		var result = 1;
+		result = prime * result + id;
+		result = prime * result + vbos.hashCode();
+		result = prime * result + indicies.hashCode();
+		result = prime * result + (initialized ? 1 : 0);
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		if (!(obj instanceof VAO)) return false;
+		
+		VAO other = (VAO) obj;
+		if (id != other.id) return false;
+		return true;
+	}
+	
+	@Override
 	public void dispose() {
 		unbind();
 		Tools.getGrabageCollector().forget(this);

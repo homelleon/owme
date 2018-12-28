@@ -7,5 +7,6 @@ public interface Geometry extends Disposable {
 	public void bind();
 	public void unbind();
 	public int size();
+	public boolean equals(Object obj);
 	
 }

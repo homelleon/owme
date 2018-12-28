@@ -15,7 +15,7 @@ import outworldmind.owme.core.Tools;
 import outworldmind.owme.tools.ImageLoader;
 import outworldmind.owme.tools.TextureUtil;
 
-public class Texture implements Disposable{
+public class Texture implements Disposable {
 	
 	public static final int FILTER_NONE = 0;
 	public static final int FILTER_BILINEAR = 1;
@@ -142,6 +142,35 @@ public class Texture implements Disposable{
 	
 	public int getId() {
 		return id;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		var result = 1;
+		result = prime * result + id;
+		result = prime * result + name.hashCode();
+		result = prime * result + type;
+		result = prime * result + bindLocation;
+		result = prime * result + width;
+		result = prime * result + height;
+		result = prime * result + filterMode;
+		result = prime * result + wrapMode;
+		result = prime * result + image.hashCode();
+		result = prime * result + (uploaded ? 1 : 0);
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		if (!(obj instanceof Texture)) return false;
+		
+		Texture other = (Texture) obj;
+		if (id != other.id) return false;
+		return true;
 	}
 	
 	public void dispose() {

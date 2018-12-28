@@ -11,6 +11,7 @@ public class Renderer {
 	private int id;
 	private RenderState state;
 	private boolean needReset = true;
+	private Geometry currentGeometry = null; 
 	
 	public Renderer(RenderState state) {
 		id = NumberGenerator.generateId();
@@ -51,9 +52,15 @@ public class Renderer {
 	
 	public void draw(Geometry geometry) {
 		if (needReset) reset();
-		geometry.bind();
+		bindGeometryIfChanged(geometry);
 //		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		GL11.glDrawElements(GL11.GL_TRIANGLES, geometry.size(), GL11.GL_UNSIGNED_INT, 0);
+	}
+	
+	private void bindGeometryIfChanged(Geometry geometry) {
+		if (!needReset && currentGeometry != null && currentGeometry.equals(geometry)) return;
+		currentGeometry = geometry;
+		geometry.bind();		
 	}
 
 }
