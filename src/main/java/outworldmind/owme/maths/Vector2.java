@@ -19,8 +19,12 @@ public class Vector2 extends Vector<Vector2> {
 	}
 	
 	public Vector2(Vector3 vector) {
+		this(vector, false);
+	}
+	
+	public Vector2(Vector3 vector, boolean useZasY) {
 		this();
-		copy(vector);
+		copy(vector, useZasY);
 	}
 	
 	public Vector2(Vector2 vector) {
@@ -65,11 +69,16 @@ public class Vector2 extends Vector<Vector2> {
 		return this;
 	}
 	
-	public Vector2 copy(Vector3 vector) {
+	public Vector2 copy(Vector3 vector, boolean useZasY) {
 		x = vector.x;
-		y = vector.z;
+		y = useZasY ? vector.z : vector.y;
 		
 		return this;
+		
+	}
+	
+	public Vector2 copy(Vector3 vector) {
+		return copy(vector, false);
 	}
 	
 	public float lengthSquared() {
@@ -145,8 +154,16 @@ public class Vector2 extends Vector<Vector2> {
 		return this;
 	}
 	
-	public Vector3 getVector3() {
-		return new Vector3(this);
+	public Vector3 getXYO() {
+		return new Vector3(x, y, 0);
+	}
+	
+	public Vector3 getXOZ() {
+		return new Vector3(x, 0, y);
+	}
+	
+	public Vector3 getOXZ() {
+		return new Vector3(0, x, y);
 	}
 	
 	public String toString() {

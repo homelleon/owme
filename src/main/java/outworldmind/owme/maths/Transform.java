@@ -1,7 +1,5 @@
 package outworldmind.owme.maths;
 
-import outworldmind.owme.core.Console;
-
 public class Transform {
 
 	private Vector3 position;

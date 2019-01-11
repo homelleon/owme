@@ -2,9 +2,11 @@ package outworldmind.owme;
 
 import java.util.stream.IntStream;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import outworldmind.owme.core.Config;
+import outworldmind.owme.core.Console;
 import outworldmind.owme.core.Engine;
 import outworldmind.owme.core.Logger;
 import outworldmind.owme.graphics.Material;
@@ -98,6 +100,11 @@ public class App {
 					0, 
 					-0.5f * Math.floorMod(index, 10) -0.2f * Math.floorMod(index, 100))))
     		.forEach(scene::add);
+    	
+    	owme.getWindow().bindKey((window, key, scancode, action, mods) -> {
+    		if (key == GLFW.GLFW_KEY_Y && action == GLFW.GLFW_PRESS)
+    			Console.log("Fer");
+    	});
     	
     	while (true) {
     		if (owme.getWindow().getCloseRequest()) break;

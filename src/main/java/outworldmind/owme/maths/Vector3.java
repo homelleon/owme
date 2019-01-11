@@ -54,9 +54,13 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		copy(x.floatValue(), y.floatValue(), z.floatValue());
 	}
 	
-	public Vector3(Vector2 vector) {
+	public Vector3(Vector2 vector, boolean useYasZ) {
 		this();
-		copy(vector);
+		copy(vector, useYasZ);
+	}
+	
+	public Vector3(Vector2 vector) {
+		this(vector, false);
 	}
 	
 	public Vector3(Vector3 vector) {
@@ -131,12 +135,22 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return this;
 	}
 	
-	public Vector3 copy(Vector2 vector) {
+	public Vector3 copy(Vector2 vector, boolean useYasZ) {
 		x = vector.x;
-		y = 0;
-		z = vector.y;
+		
+		if (useYasZ) {
+			y = 0;
+			z = vector.y;
+		} else {
+			y = vector.y;
+			z = 0;
+		}
 		
 		return this;
+	}
+	
+	public Vector3 copy(Vector2 vector) {
+		return copy(vector, false);
 	}
 
 	public Vector3 copy(Vector3 vector) {
@@ -385,8 +399,16 @@ public class Vector3 extends Vector<Vector3> implements Comparable<Vector3> {
 		return 1;
 	}
 	
-	public Vector2 getVector2() {
-		return new Vector2(this);
+	public Vector2 getXY() {
+		return new Vector2(x, y);
+	}
+	
+	public Vector2 getXZ() {
+		return new Vector2(x, z);
+	}
+	
+	public Vector2 getYZ() {
+		return new Vector2(y, z);
 	}
 	
 	public float[] toArray() {
