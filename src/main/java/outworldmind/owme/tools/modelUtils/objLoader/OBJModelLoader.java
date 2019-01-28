@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import outworldmind.owme.core.Console;
+import outworldmind.owme.core.Logger;
+import outworldmind.owme.core.Tools;
 import outworldmind.owme.graphics.GeometryBuilder;
 import outworldmind.owme.graphics.Material;
 import outworldmind.owme.graphics.Model;
@@ -136,7 +138,7 @@ public class OBJModelLoader {
 			BufferedReader meshReader = null;
 			// load .obj
 			try {
-				System.out.println(path + objFile + ".obj");
+				Tools.getLogger().log("Start loading " + path + objFile + ".obj...");
 				InputStreamReader inputStream = new InputStreamReader(OBJModelLoader.class.getResourceAsStream(path + objFile + ".obj"));
 				meshReader = new BufferedReader(inputStream);
 				String line;
@@ -253,7 +255,7 @@ public class OBJModelLoader {
 					}
 				}
 				
-				Console.log("obj loading time : " + (System.currentTimeMillis() - time) + "ms");
+				Tools.getLogger().log("obj loading time : " + (System.currentTimeMillis() - time) + "ms");
 				
 				return models.toArray(Model[]::new);
 				

@@ -1,46 +1,18 @@
 package outworldmind.owme.core;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_HIDDEN;
-import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
-import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
-import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
-import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
-import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
-import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
-import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.IntBuffer;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWKeyCallbackI;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+
+import outworldmind.owme.maths.Vector2;
 
 public class Window {
 	
@@ -49,13 +21,11 @@ public class Window {
 	private String name;
 	private int width;
 	private int height;
-	private long window;
+	private long id;
 	private boolean closeRequest;
 	private int FPS;
 	private boolean showFPS = false;
 	private boolean initialized = false;
-	
-	private ActionEvent event;
 	
 	public Window(int width, int height) {
 		this(defaultName, width, height);
@@ -80,34 +50,42 @@ public class Window {
 		glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		
-		window = glfwCreateWindow(width, height, name, NULL, NULL);
+		id = glfwCreateWindow(width, height, name, NULL, NULL);
 		
-		if (window == NULL)
+		if (id == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 		
-		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-				glfwSetWindowShouldClose(window, true);
+		glfwSetInputMode(id, GLFW.GLFW_LOCK_KEY_MODS, GLFW.GLFW_TRUE);
+		glfwSetKeyCallback(id, (window, key, scancode, action, mods) -> {
+			Tools.getControls().getKeyboard().update(window, key, scancode, action, mods);
 		});
 		
-		try (MemoryStack stack = stackPush()) {
+		glfwSetMouseButtonCallback(id, (window, button, action, mods) -> {
+			Tools.getControls().getMouse().updateButtons(window, button, action, mods);
+		});
+		
+		glfwSetCursorPosCallback(id, (window, xPos, yPos) -> {
+			Tools.getControls().getMouse().updateMoves(window, xPos, yPos);
+		});
+		
+		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer pWidth = stack.mallocInt(1);
 			IntBuffer pHeight = stack.mallocInt(1);
 			
-			glfwGetWindowSize(window, pWidth, pHeight);
+			glfwGetWindowSize(id, pWidth, pHeight);
 			
 			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 			
 			glfwSetWindowPos(
-					window,
+					id,
 					(vidmode.width() - pWidth.get(0)) / 2,
 					(vidmode.height() - pHeight.get(0)) / 2
 			);
 		}
 		
-		glfwMakeContextCurrent(window);
+		glfwMakeContextCurrent(id);
 		glfwSwapInterval(1);
-		glfwShowWindow(window);
+		glfwShowWindow(id);
 		
 		GL.createCapabilities();
 	}
@@ -116,29 +94,31 @@ public class Window {
 		return closeRequest;
 	}
 	
+	public void close() {
+		glfwSetWindowShouldClose(id, true);
+	}
+	
 	public void update() {
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(id);
 		glfwPollEvents();
-		if (glfwWindowShouldClose(window)) closeRequest = true;
+		if (glfwWindowShouldClose(id)) closeRequest = true;
 	}
 	
 	public void destroy() {
-		glfwFreeCallbacks(window);
-		glfwDestroyWindow(window);
+		glfwFreeCallbacks(id);
+		glfwDestroyWindow(id);
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
 	}
 	
 	public void grabMouse() {
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		Tools.getControls().getMouse().setStartPosition(new Vector2(width / 2, height / 2));
+		glfwSetCursorPos(id, width / 2, height / 2);
+		glfwSetInputMode(id, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 	
 	public void hideCursor() {
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	}
-	
-	public void bindKey(GLFWKeyCallbackI callBack) {
-		glfwSetKeyCallback(window, callBack);
+		glfwSetInputMode(id, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	}
 	
 	private void setName(String name) {
@@ -149,8 +129,12 @@ public class Window {
 		return name;
 	}
 	
+	public long getId() {
+		return id;
+	}
+	
 	private void addToTitle(String title) {
-		GLFW.glfwSetWindowTitle(window, name + title);
+		glfwSetWindowTitle(id, name + title);
 	}
 	
 	private void setWidth(int width) {
@@ -168,9 +152,5 @@ public class Window {
 	public int getHeight() {
 		return height;
 	}
-	
-	
-	
-	
 
 }

@@ -159,9 +159,9 @@ public class Matrix4 extends Matrix {
 		rx.m[2][1] =  (float) Math.sin(x);  rx.m[2][2] =  (float) Math.cos(x); 
 		
 		ry.m[0][0] =  (float) Math.cos(y);  ry.m[0][2] =  (float) Math.sin(y);			     
-		ry.m[2][0] = -(float) Math.sin(y);  ry.m[2][2] =  (float) Math.cos(y);  
-	
-		this.mul(rz.mul(ry.mul(rx)));
+		ry.m[2][0] = -(float) Math.sin(y);  ry.m[2][2] =  (float) Math.cos(y);
+		
+		this.mul(rx.mul(ry.mul(rz)));
 		
 		return this;
 	}

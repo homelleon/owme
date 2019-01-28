@@ -1,24 +1,38 @@
 package outworldmind.owme.core;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Engine {
 	
 	private Config config;
-	private Window window;
+	private Map<String, Window> windows;
 	private ConfigValidator validator;
 	
 	public Engine(Config config) {
 		this.config = config;
+		windows = new HashMap<String, Window>();
 		Tools.init(config);
 	}
 	
-	public Window getWindow() {
-		return window;
+	public Window getWindow(String name) {
+		return windows.get(name);
 	}
 	
+	public Collection<Window> getWindows() {
+		return windows.values();
+	}
+	 
 	public void start() {
 		initValidator();
 		validateConfig();
-		initWindow();
+		
+		addWindow(
+				(String) config.getParam(Config.WINDOW_NAME), 
+				(int) config.getParam(Config.WINDOW_WIDTH), 
+				(int) config.getParam(Config.WINDOW_HEIGHT));
+		windows.values().forEach(Window::initialize);
 	}
 	
 	private void initValidator() {
@@ -45,21 +59,20 @@ public class Engine {
 			throw new ParamValidationException("Engine.initialize", validator);
 	}
 	
-	private void initWindow() {
-		var width = config.getParam(Config.WINDOW_WIDTH);
-		var height = config.getParam(Config.WINDOW_HEIGHT);
-		var name = config.getParam(Config.WINDOW_NAME);
-		window = new Window((String) name, (int) width, (int) height);
-		window.initialize();
+	private void addWindow(String name, int width, int height) {
+		windows.put(name, new Window((String) name, (int) width, (int) height));
 	}
 	
 	public void update() {
-		window.update();
+		windows.values().forEach(Window::update);
 	}
 	
 	public void stop() {
-		Console.log("released :" + Tools.getGrabageCollector().disengage());
-		window.destroy();
+		Tools.getLogger().log("released: " + Tools.getGrabageCollector().disengage());
+		windows.values().stream()
+			.filter(window -> window.getCloseRequest())
+			.forEach(Window::close);
+		windows.values().forEach(Window::destroy);
 	}
 
 }

@@ -90,6 +90,11 @@ public class Scene {
 		texture.bind();
 	}
 	
+	public void tryToSetShaderValue(Shader shader, String name, Object value) {
+		if (shader.hasVariable(name))
+			shader.setValue(name, value);
+	}
+	
 	public Camera getCamera() {
 		return camera;
 	}

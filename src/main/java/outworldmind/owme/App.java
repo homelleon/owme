@@ -2,13 +2,15 @@ package outworldmind.owme;
 
 import java.util.stream.IntStream;
 
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import outworldmind.owme.core.Config;
-import outworldmind.owme.core.Console;
 import outworldmind.owme.core.Engine;
+import outworldmind.owme.core.Keyboard;
 import outworldmind.owme.core.Logger;
+import outworldmind.owme.core.Mouse;
+import outworldmind.owme.core.Tools;
+import outworldmind.owme.core.Window;
 import outworldmind.owme.graphics.Material;
 import outworldmind.owme.graphics.Model;
 import outworldmind.owme.graphics.RenderState;
@@ -29,11 +31,12 @@ public class App {
     public static void main(String[] args ) {
     	var config = new Config();
     	
-    	config.setParam(Config.WINDOW_NAME, "OWME Alpha Test Window");
+    	var windowName = "OWME Alpha Test Window";
+    	config.setParam(Config.WINDOW_NAME, windowName);
     	config.setParam(Config.WINDOW_WIDTH, 1024);
     	config.setParam(Config.WINDOW_HEIGHT, 768);
     	
-    	config.setParam(Config.CONSOLE_MODE, Logger.NO_LOG_MODE);
+    	config.setParam(Config.CONSOLE_MODE, Logger.CONSOLE_LOG_MODE);
     	
     	config.setParam(Config.CAMERA_FOV, 50f);
     	config.setParam(Config.CAMERA_NEAR_PLANE, 0.1f);
@@ -101,16 +104,46 @@ public class App {
 					-0.5f * Math.floorMod(index, 10) -0.2f * Math.floorMod(index, 100))))
     		.forEach(scene::add);
     	
-    	owme.getWindow().bindKey((window, key, scancode, action, mods) -> {
-    		if (key == GLFW.GLFW_KEY_Y && action == GLFW.GLFW_PRESS)
-    			Console.log("Fer");
+    	var window = owme.getWindow(windowName);
+    	
+    	Tools.getControls().getKeyboard().bindKey(event -> {
+			if (Keyboard.keyReleased(Keyboard.KEY_ESCAPE, window, event))
+				owme.getWindows().forEach(Window::close);
+    		if (Keyboard.keyHold(Keyboard.KEY_A, window, event))
+    			camera.move(new Vector3(0, 0, 2));
+    		if (Keyboard.keyHold(Keyboard.KEY_D, window, event))
+    			camera.move(new Vector3(0, 0, -2));
+    		if (Keyboard.keyPressed(Keyboard.KEY_W, window, event))
+    			camera.move(new Vector3(2, 0, 0));
+    		if (Keyboard.keyPressed(Keyboard.KEY_S, window, event))
+    			camera.move(new Vector3(-2, 0, 0));
+    		if (Keyboard.keyPressed(Keyboard.KEY_SPACE, window, event))
+    			camera.move(new Vector3(0, 2, 0));
+    		if (Keyboard.keyPressed(Keyboard.KEY_C, window, event))
+    			camera.move(new Vector3(0, -2, 0));
     	});
     	
+    	Tools.getControls().getMouse().bindMouseButton(event -> {
+    	});
+    	
+    	Tools.getControls().getMouse().bindMouseMove(event -> {
+    		var speed = 0.1f;
+    		if (Mouse.movedLeft(event))
+    			camera.rotate(new Rotation(0, Mouse.getDPos(event).x * speed, 0));
+    		if (Mouse.movedRight(event))
+    			camera.rotate(new Rotation(0, Mouse.getDPos(event).x * speed, 0));
+    		if (Mouse.movedUp(event))
+    			camera.rotate(new Rotation(Mouse.getDPos(event).y * speed, 0, 0));
+    		if (Mouse.movedDown(event))
+    			camera.rotate(new Rotation(Mouse.getDPos(event).y * speed, 0, 0));
+    	});
+    	
+    	owme.getWindow(windowName).grabMouse();
+    	
     	while (true) {
-    		if (owme.getWindow().getCloseRequest()) break;
-    		camera.rotate(new Rotation(0, 1, 0));
-    		scene.draw();
+    		if (window.getCloseRequest()) break;
     		owme.update();
+    		scene.draw();
     	}
     	owme.stop();
     }

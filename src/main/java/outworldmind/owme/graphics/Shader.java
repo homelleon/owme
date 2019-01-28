@@ -151,6 +151,10 @@ public abstract class Shader implements Disposable {
 		return this;
 	}
 	
+	public boolean hasVariable(String name) {
+		return variables.containsKey(name);
+	}
+	
 	public Shader addVariables(List<ShaderVariable> variableList) {
 		variableList.forEach(variable -> variables.put(variable.getName(), variable));
 		needUpdate = true;

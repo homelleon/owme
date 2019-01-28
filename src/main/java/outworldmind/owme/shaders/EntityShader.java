@@ -6,6 +6,7 @@ import outworldmind.owme.graphics.Shader;
 import outworldmind.owme.graphics.ShaderVariable;
 import outworldmind.owme.graphics.Texture;
 import outworldmind.owme.maths.Matrix4;
+import outworldmind.owme.maths.Vector3;
 import outworldmind.owme.tools.FileLoader;
 
 public class EntityShader extends Shader {
@@ -30,7 +31,7 @@ public class EntityShader extends Shader {
 			new ShaderVariable(DIFFUSE_MAP, new Texture()),
 			new ShaderVariable(TRANSFORMATION_MATRIX, new Matrix4()),
 			new ShaderVariable(PROJECTION_MATRIX, new Matrix4()),
-			new ShaderVariable(VIEW_MATRIX, new Matrix4())
+			new ShaderVariable(VIEW_MATRIX, new Matrix4())		
 		));
 	}
 
