@@ -1,2 +1,2 @@
 # owme
-Out World Mind Engine (2nd edition)
+Outworld Mind Engine (2nd edition)
