@@ -1,2 +1,14 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Maven
+log/
 target/
-*.log
+
+
+# Package Files #
+*.jar
+*.war
+*.ear
